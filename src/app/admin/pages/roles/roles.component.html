@@ -1,0 +1,202 @@
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h1>Roles</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
+                <li class="breadcrumb-item">Roles</li>
+            </ol>
+        </nav>
+    </div>
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card" *ngIf="!showAddRole && !showEditRole">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            Roles
+                            <button class="btn btn-primary btn-sm action-button"
+                                *ngIf="!addBtnDisable && !showAddRole && userAccess.edit" (click)="addRole()"><i class="bi bi-plus-circle"></i> Add New</button>
+                        </h5>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">S.No</th>
+                                    <th scope="col">Role Name</th>
+                                    <th scope="col">Role Type</th>
+                                    <th scope="col">Last Modified On</th>
+                                    <th scope="col" *ngIf="userAccess.edit">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let data of rolesList; let i = index">
+                                    <td>{{ i + 1 }}</td>
+                                    <td>{{ data.role_name }}</td>
+                                    <td>{{ data.role_type }}</td>
+                                    <td>{{ data.updatedAt | date:'medium' }}</td>
+                                    <td *ngIf="userAccess.edit">
+                                        <a (click)="editRole(data)"><i class="bi bi-pencil-square"></i></a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            <div class="card" *ngIf="showAddRole && !showEditRole">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        ADD NEW ROLE
+                        <button class="btn btn-primary btn-sm action-button" *ngIf="showEditRole || showAddRole"
+                        (click)="back()"><i class="bi bi-arrow-left-circle"></i> BACK</button>
+                    </h5>
+                    <form class="row g-3" id="addRoleForm" [formGroup]="addRoleForm" (ngSubmit)="addFormSubmit()">
+                        <div class="col-md-4"> 
+                            <label class="form-label" for="role_name">Role Name* :</label>
+                            <input type="text" class="form-control" formControlName="role_name" autoFocus required>
+                            <div class="error" *ngIf="form?.role_name?.invalid && (form?.role_name?.dirty || form?.role_name?.touched)">
+                                <small *ngIf="form?.role_name?.errors?.required">Please enter role name</small>
+                                <small *ngIf="form?.role_name?.errors?.minlength">Role name should be min 5 chars</small>
+                                <small *ngIf="form?.role_name?.errors?.maxlength">Role name should be max 50 chars</small>
+                                <small *ngIf="form?.role_name?.errors?.pattern">Please enter valid role name</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4"> 
+                            <label class="form-label" for="role_type">Role Type*</label>
+                            <select class="form-select" formControlName="role_type">
+                                <option *ngFor="let roleType of roleTypes; let i = index" value="{{roleType.type}}">{{roleType.type}}</option>
+                            </select>
+                            <div *ngIf="form?.role_type?.invalid && (form?.role_type?.dirty || form?.role_type?.touched)" class="error">
+                                <small *ngIf="form?.role_type?.errors?.required">Please select a role type</small>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label" for="modules"><strong>Modules*</strong> :</label><br />
+                            <div class="form-check" *ngFor="let module of modules">
+                                <input class="form-check-input" id="{{module.module_value}}" [value]="module.module_value"
+                                    [(ngModel)]="module.check" name="{{module.module_value}}" #myItem
+                                    (change)="changeParent(module.module_value,$event)"
+                                    [ngModelOptions]="{standalone: true}" type="checkbox">
+                                <label class="form-check-label" for="{{module.module_value}}">{{module.module_name}}</label>
+                                <div class="row">
+                                    <div class="offset-sm-1 col-sm-3 nopadding">
+                                        <div class="form-group">
+                                            <div class="checkbox checkbox-success">
+                                                <input id="{{module.module_value}}-view" class="child"
+                                                    [checked]="isChecked(module.module_value,'view')"
+                                                    (change)="changeChild(module.module_value,'view',$event)"
+                                                    type="checkbox" [disabled]="true">
+                                                <label for="{{module.module_value}}-view">&nbsp;View</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="offset-sm-1 col-sm-3 nopadding">
+                                        <div class="form-group">
+                                            <div class="checkbox checkbox-success">
+                                                <input id="{{module.module_value}}-edit" class="child"
+                                                    [checked]="isChecked(module.module_value,'edit')"
+                                                    (change)="changeChild(module.module_value,'edit',$event)"
+                                                    type="checkbox" [disabled]="!module.check">
+                                                <label for="{{module.module_value}}-edit">&nbsp;Edit</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="offset-sm-1 col-sm-3 nopadding">
+                                        <div class="form-group">
+                                            <div class="checkbox checkbox-success">
+                                                <input id="{{module.module_value}}-delete" class="child"
+                                                    [checked]="isChecked(module.module_value,'delete')"
+                                                    (change)="changeChild(module.module_value,'delete',$event)"
+                                                    type="checkbox" [disabled]="!module.check">
+                                                <label for="{{module.module_value}}-delete">&nbsp;Delete</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center"> 
+                            <hr />
+                            <button [disabled]="addRoleForm.invalid || selectedIds.length === 0 || addBtnDisable"
+                                class="btn btn-primary btn-sm waves-effect waves-light action-button"
+                                type="submit">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="card" *ngIf="showEditRole && !showAddRole">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        UPDATE ROLE
+                        <button class="btn btn-primary btn-sm action-button" *ngIf="showEditRole || showAddRole"
+                        (click)="back()"><i class="bi bi-arrow-left-circle"></i> BACK</button>
+                    </h5>
+                    <form class="row g-3" [formGroup]="editRoleForm" (ngSubmit)="editFormSubmit()">
+                        <input type="hidden" class="form-control" formControlName="role_id" required="" id="role_id">
+                        <div class="col-md-4"> 
+                            <label class="form-label" for="role_name">Role Name* :</label>
+                            <input type="text" class="form-control" formControlName="role_name" required>
+                            <div class="error" *ngIf="editForm?.role_name?.invalid && (editForm?.role_name?.dirty || editForm?.role_name?.touched)">
+                                <small *ngIf="editForm?.role_name?.errors?.required">Please enter role name</small>
+                                <small *ngIf="editForm?.role_name?.errors?.minlength">Role name should be min 5 chars</small>
+                                <small *ngIf="editForm?.role_name?.errors?.maxlength">Role name should be max 50 chars</small>
+                                <small *ngIf="editForm?.role_name?.errors?.pattern">Please enter valid role name</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4"> 
+                            <label class="form-label" for="role_type">Role Type*</label>
+                            <select class="form-select" formControlName="role_type">
+                                <option *ngFor="let roleType of roleTypes; let i = index" value="{{roleType.type}}">{{roleType.type}}</option>
+                            </select>
+                            <div *ngIf="editForm?.role_type?.invalid && (editForm?.role_type?.dirty || editForm?.role_type?.touched)" class="error">
+                                <small *ngIf="editForm?.role_type?.errors?.required">Please select a role type</small>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label" for="modules"><strong>Modules*</strong> :</label><br />
+                            <div class="form-check" *ngFor="let module of modulesList ; let i = index">
+                                <div>
+                                    <input class="form-check-input" id="{{module.module_value}}" [value]="module.module_value" [(ngModel)]="module.check" name="{{module.module_value}}" #myItem (change)="changeParent(module.module_value,$event)" [ngModelOptions]="{standalone: true}" type="checkbox">
+                                    <label class="form-check-label" for="{{module.module_value}}"><b>{{module.module_name}}</b></label>
+                                </div>
+                                <div class="row">
+                                    <div class="offset-sm-1 col-sm-3">
+                                        <div class="form-group">
+                                            <div class="checkbox">
+                                                <input class="form-check-input" id="{{module.module_value}}-view" class="child" [checked]="isChecked(module.module_value,'view')" (change)="changeChild(module.module_value,'view',$event)" type="checkbox" [disabled]="true">
+                                                <label class="form-check-label" for="{{module.module_value}}-view">&nbsp;View</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="offset-sm-1 col-sm-3">
+                                        <div class="form-group">
+                                            <div class="checkbox">
+                                                <input id="{{module.module_value}}-edit" class="child" [checked]="isChecked(module.module_value,'edit')" (change)="changeChild(module.module_value,'edit',$event)" type="checkbox" [disabled]="!module.check">
+                                                <label for="{{module.module_value}}-edit">&nbsp;Edit</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="offset-sm-1 col-sm-3">
+                                        <div class="form-group">
+                                            <div class="checkbox">
+                                                <input id="{{module.module_value}}-delete" class="child" [checked]="isChecked(module.module_value,'delete')" (change)="changeChild(module.module_value,'delete',$event)" type="checkbox" [disabled]="!module.check">
+                                                <label for="{{module.module_value}}-delete">&nbsp;Delete</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center"> 
+                            <hr />
+                            <button [disabled]="editRoleForm.invalid || selectedIds.length === 0"
+                                class="btn btn-primary btn-sm waves-effect waves-light action-button"
+                                type="submit">Save Changes</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        </div>
+    </section>
+</main>

@@ -1,0 +1,53 @@
+/* You can add global styles to this file, and also import other style files */
+.error {
+    font-size: 14px !important;
+    color: #FF0000 !important;
+}
+.error-top {
+    position:fixed; 
+    top: 0px; 
+    left: 25%; 
+    width: 50%;
+    z-index:9999; 
+    margin-top: 0 !important;
+}
+
+.mt-10 {
+    margin-top: 10px !important;
+}
+
+.mt-15 {
+    margin-top: 15px !important;
+}
+
+.mt-20 {
+    margin-top: 20px !important;
+}
+
+.card-title {
+    border-bottom: 1px #f0dad5 solid;
+}
+
+.card-title button {
+    float: right !important;
+}
+
+a, .badge {
+    cursor: pointer;
+}
+
+.table > :not(:first-child) {
+    border-top: 1px solid currentColor !important;
+}
+
+.action-dropdown {
+    list-style: none !important;
+}
+
+.action-dropdown-menu {
+    transform: translate(-16px, 36px) !important;
+}
+
+.mr-10 {
+    margin-right: 10px !important;
+}

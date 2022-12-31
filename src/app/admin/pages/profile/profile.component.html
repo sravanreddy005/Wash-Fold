@@ -1,0 +1,191 @@
+<main id="main" class="main">
+    <div class="pagetitle">
+       <h1>Profile</h1>
+       <nav>
+          <ol class="breadcrumb">
+             <li class="breadcrumb-item"><a routerLink="/">Home</a></li>
+             <li class="breadcrumb-item">Users</li>
+             <li class="breadcrumb-item active">Profile</li>
+          </ol>
+       </nav>
+    </div>
+    <section class="section profile">
+       <div class="row">
+          <div class="col-xl-12">
+             <div class="card">
+                <div class="card-body pt-3">
+                   <ul class="nav nav-tabs nav-tabs-bordered">
+                      <li class="nav-item"> <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-overview">Overview</button></li>
+                      <li class="nav-item"> <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-edit">Edit Profile</button></li>
+                      <li class="nav-item"> <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-settings">Settings</button></li>
+                      <li class="nav-item"> <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-change-password">Change Password</button></li>
+                   </ul>
+                   <div class="tab-content pt-2">
+                      <div class="tab-pane fade show active profile-overview" id="profile-overview">
+                         <h5 class="card-title">Profile Details</h5>
+                         <div class="row">
+                            <div class="col-lg-3 col-md-4 label ">First Name</div>
+                            <div class="col-lg-9 col-md-8">{{userData.first_name}}</div>
+                         </div>
+                         <div class="row">
+                            <div class="col-lg-3 col-md-4 label">Last Name</div>
+                            <div class="col-lg-9 col-md-8">{{userData.last_name}}</div>
+                         </div>
+                         <div class="row">
+                            <div class="col-lg-3 col-md-4 label">Email</div>
+                            <div class="col-lg-9 col-md-8">{{userData.email}}</div>
+                         </div>
+                         <div class="row">
+                            <div class="col-lg-3 col-md-4 label">Mobile Number</div>
+                            <div class="col-lg-9 col-md-8">{{userData.mobile_number}}</div>
+                         </div>
+                         <div class="row">
+                            <div class="col-lg-3 col-md-4 label">Address</div>
+                            <div class="col-lg-9 col-md-8">{{userData.address}}</div>
+                         </div>
+                      </div>
+                      <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
+                         <form [formGroup]="updateProfileForm" (ngSubmit)="updateProfileFormSubmit()">
+                            <div class="row mb-3">
+                                <label for="first_name" class="col-md-4 col-lg-3 col-form-label">First Name*</label>
+                                <div class="col-md-6 col-lg-6"> 
+                                    <input formControlName="first_name" type="text" class="form-control">
+                                    <div *ngIf="editForm?.first_name?.invalid && (editForm?.first_name?.dirty || editForm?.first_name?.touched)" class="error">
+                                        <small *ngIf="editForm?.first_name?.errors?.required">Please enter first name</small>
+                                        <small *ngIf="editForm?.first_name?.errors?.minlength">First name should be min 3 chars</small>
+                                        <small *ngIf="editForm?.first_name?.errors?.maxlength">First name should be max 30 chars</small>
+                                        <small *ngIf="editForm?.first_name?.errors?.pattern">Please enter valid first name</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label for="last_name" class="col-md-4 col-lg-3 col-form-label">Last Name</label>
+                                <div class="col-md-6 col-lg-6"> 
+                                    <input formControlName="last_name" type="text" class="form-control">
+                                    <div *ngIf="editForm?.last_name?.invalid && (editForm?.last_name?.dirty || editForm?.last_name?.touched)" class="error">
+                                        <small *ngIf="editForm?.last_name?.errors?.maxlength">Last name should be max 30 chars</small>
+                                        <small *ngIf="editForm?.last_name?.errors?.pattern">Please enter valid last name</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label for="mobile_number" class="col-md-4 col-lg-3 col-form-label">Mobile Number*</label>
+                                <div class="col-md-6 col-lg-6"> 
+                                    <input formControlName="mobile_number" type="text" class="form-control">
+                                    <div *ngIf="editForm?.mobile_number?.invalid && (editForm?.mobile_number?.dirty || editForm?.mobile_number?.touched)" class="error">
+                                        <small *ngIf="editForm?.mobile_number?.errors?.required">Please enter mobile number</small>
+                                        <small *ngIf="editForm?.mobile_number?.errors?.pattern">Please enter valid mobile number</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label for="address" class="col-md-4 col-lg-3 col-form-label">Address</label>
+                                <div class="col-md-6 col-lg-6"> 
+                                    <textarea formControlName="address" type="text" class="form-control"></textarea>
+                                    <div *ngIf="editForm?.address?.invalid && (editForm?.address?.dirty || editForm?.address?.touched)" class="error">
+                                        <small *ngIf="editForm?.address?.errors?.required">Please enter address</small>
+                                        <small *ngIf="editForm?.address?.errors?.minlength">Address should be max 10 chars</small>
+                                        <small *ngIf="editForm?.address?.errors?.maxlength">Address should be max 250 chars</small>
+                                        <small *ngIf="editForm?.address?.errors?.pattern">Please enter valid address</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-center"> 
+                                <hr />
+                                <button type="submit" [disabled]="updateProfileForm.invalid || submitted" class="btn btn-primary">Save Changes</button>
+                            </div>
+                         </form>
+                      </div>
+                      <div class="tab-pane fade pt-3" id="profile-settings">
+                         <form [formGroup]="changeEmailForm">
+                            <div class="row mb-3">
+                                <div class="row mb-3">
+                                    <label for="email" class="col-md-4 col-lg-3 col-form-label">Current Email*</label>
+                                    <div class="col-md-6 col-lg-6"> 
+                                        <input type="email" class="form-control" formControlName="email" required>
+                                        <div *ngIf="emailForm?.email?.invalid && (emailForm?.email?.dirty || emailForm?.email?.touched)" class="error">
+                                            <small class="form-control-feedback" *ngIf="emailForm?.email?.errors?.required">Please enter email address</small>
+                                            <small class="form-control-feedback" *ngIf="emailForm?.email?.errors?.pattern">Please enter valid email address</small>
+                                        </div>
+                                    </div>
+                                 </div>
+                            </div>
+                            <div class="text-center"> 
+                                <hr />
+                                <button type="button" data-bs-toggle="modal" data-bs-target="#confirmPaswdModalDialog" [disabled]="changeEmailForm.invalid || submitted" class="btn btn-primary">Save Changes</button>
+                            </div>
+                         </form>
+                      </div>
+                      <div class="tab-pane fade pt-3" id="profile-change-password">
+                         <form [formGroup]="changePswdForm" (ngSubmit)="changePasswordFormSubmit()">
+                            <div class="row mb-3">
+                                <label for="old_password" class="col-md-4 col-lg-3 col-form-label">Current Password*</label>
+                                <div class="col-md-4 col-lg-4"> 
+                                    <input type="password" class="form-control" formControlName="old_password" required>
+                                    <div *ngIf="cPswdForm?.old_password?.invalid && (cPswdForm?.old_password?.dirty || cPswdForm?.old_password?.touched)" class="error">
+                                        <small class="form-control-feedback" *ngIf="cPswdForm?.old_password?.errors?.required">Please enter current password</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label for="new_password" class="col-md-4 col-lg-3 col-form-label">New Password*</label>
+                                <div class="col-md-4 col-lg-4"> 
+                                    <input type="password" class="form-control form-control-line" formControlName="new_password" required>
+                                    <div *ngIf="cPswdForm?.new_password?.invalid && (cPswdForm?.new_password?.dirty || cPswdForm?.new_password?.touched)" class="error">
+                                        <small class="form-control-feedback" *ngIf="cPswdForm?.new_password?.errors?.required">Please enter new password</small>
+                                        <small class="form-control-feedback" *ngIf="cPswdForm?.new_password?.errors?.pattern">Password must be min 8 chars including one uppercase, one special character and alphanumeric</small>
+                                        <small class="form-control-feedback" *ngIf="cPswdForm?.new_password?.errors?.confirmNewIsNotOld">Old and new passwords must be different</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label for="confirm_new_password" class="col-md-4 col-lg-3 col-form-label">Re-enter New Password*</label>
+                                <div class="col-md-4 col-lg-4"> 
+                                    <input type="password" class="form-control form-control-line" formControlName="confirm_new_password" required>
+                                    <div *ngIf="cPswdForm?.confirm_new_password?.invalid && (cPswdForm?.confirm_new_password?.dirty || cPswdForm?.confirm_new_password?.touched)" class="error">
+                                        <small class="form-control-feedback" *ngIf="cPswdForm?.confirm_new_password?.errors?.required">Please confirm new password</small>
+                                        <small class="form-control-feedback" *ngIf="cPswdForm?.confirm_new_password?.errors?.confirmedValidator">Password and Confirm Password must be match</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-center"> 
+                                <hr />
+                                <button type="submit" [disabled]="changePswdForm.invalid || submitted" class="btn btn-primary">Change Password</button>
+                            </div>
+                         </form>
+                      </div>
+                   </div>
+                </div>
+             </div>
+          </div>
+       </div>
+    </section>
+    <div class="modal fade" id="confirmPaswdModalDialog" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form [formGroup]="confirmPswdForm" (ngSubmit)="changeEmailFormSubmit()">
+                    <div class="modal-header">
+                        <h5 class="modal-title">CONFIRM PASSWORD</h5>
+                        <button type="button" id="close_password_modal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="mb-1">Please enter your password to update email address</p><br />
+                        <div class="row g-3">
+                            <div class="col-md-8">
+                                <label for="password" class="form-label">Password*</label>
+                                <input type="password" class="form-control" formControlName="password" autoFocus required>
+                                <div *ngIf="pswdForm?.password?.invalid && (pswdForm?.password?.dirty || pswdForm?.password?.touched)" class="error">
+                                    <small class="form-control-feedback" *ngIf="pswdForm?.password?.errors?.required">Please enter password</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer"> 
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> 
+                        <button type="submit" [disabled]="confirmPswdForm.invalid || submitted" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+     </div>
+ </main>

@@ -1,0 +1,212 @@
+<main id="main" class="main">
+    <div class="pagetitle">
+       <h1>Products List</h1>
+       <nav>
+          <ol class="breadcrumb">
+             <li class="breadcrumb-item"><a routerLink="/data/dashboard">Home</a></li>
+             <li class="breadcrumb-item">Products List</li>
+          </ol>
+       </nav>
+    </div>
+    <section class="section">
+       <div class="row">
+          <div class="col-lg-12">
+             <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        Products List
+                        <button *ngIf="userAccess.edit" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addModalDialog"><i class="bi bi-plus-circle"></i> Add New</button>
+                    </h5>
+                   <div class="table-responsive" *ngIf="productsList && productsList.length > 0">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>S.No</th>
+                                    <th>Product Type</th>
+                                    <th>Category</th>
+                                    <th>Product Name</th>
+                                    <th>Price</th>
+                                    <th>Image</th>
+                                    <th>Status</th>
+                                    <th *ngIf="userAccess.edit || userAccess.delete">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td></td>
+                                    <td><input type="text" class="form-control form-control-sm" name="search_string1" [(ngModel)]="search_string1" placeholder="Product Type"/></td>
+                                    <td><input type="text" class="form-control form-control-sm" name="search_string2" [(ngModel)]="search_string2" placeholder="Catgeory"/></td>
+                                    <td><input type="text" class="form-control form-control-sm" name="search_string3" [(ngModel)]="search_string3" placeholder="Product Name"/></td>
+                                    <td><input type="text" class="form-control form-control-sm" name="search_string4" [(ngModel)]="search_string4" placeholder="Price"/></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr *ngFor="let data of productsList | smartFilter: { 'product_type.product_type': search_string1, 'category.category_name': search_string2, product_name: search_string3, product_price: search_string4 } | paginate: { id: 'pagination_id', itemsPerPage: pageSize, currentPage: page, totalItems: totalCount }; let i = index">
+                                    <td>{{i+1}}</td>
+                                    <td>{{data.product_type.product_type}}</td>
+                                    <td>{{data.category.category_name}}</td>
+                                    <td>{{data.product_name}}</td>
+                                    <td>{{data.product_price}}</td>
+                                    <td><img crossorigin="anonymous" src="{{serverURL}}uploads/products/{{data.product_image}}" width="100px" height="100px"></td>
+                                    <td>
+                                        <span *ngIf="data.active === true" (click)="changeStatus(data)" class="badge rounded-pill bg-primary">Active</span>
+                                        <span *ngIf="data.active !== true" (click)="changeStatus(data)" class="badge rounded-pill bg-warning">Inactive</span>
+                                    </td>
+                                    <td *ngIf="userAccess.edit || userAccess.delete">
+                                        <a (click)="edit(data)" data-bs-toggle="modal" data-bs-target="#updateModalDialog"><i class="bi bi-pencil-square"></i></a>
+                                        <span class="mr-10"></span>
+                                        <a (click)="delete(data.id)"><i class="bi bi-trash"></i></a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="pagination-div">
+                            <pagination-template #p="paginationApi" id="pagination_id" (pageChange)="page = $event">
+                                <ul class="pagination pagination-circled mb-0" *ngIf="(p.pages).length > 1">
+                                    <li class="page-item" [class.disabled]="p.isFirstPage()"><a class="page-link" *ngIf="!p.isFirstPage()" (click)="p.previous()"><i
+                                            class="icon ion-ios-arrow-back"></i></a></li>
+                                    <li class="page-item" *ngFor="let page of p.pages" [class.active]="p.getCurrent() === page.value">
+                                        <a class="page-link" (click)="p.setCurrent(page.value)" *ngIf="p.getCurrent() !== page.value">{{
+                                        page.label }}</a>
+                                        <a class="page-link" *ngIf="p.getCurrent() === page.value">{{ page.label }}</a>
+                                    </li>
+                                    <li class="page-item" [class.disabled]="p.isLastPage()"><a class="page-link" *ngIf="!p.isLastPage()" (click)="p.next()"><i
+                                            class="icon ion-ios-arrow-forward"></i></a></li>
+                                </ul>
+                            </pagination-template>
+                        </div>
+                    </div>
+                    <p *ngIf="!productsList || productsList.length === 0">No data available</p>
+                </div>
+             </div>
+          </div>
+       </div>
+    </section>    
+    <div class="modal fade" id="addModalDialog" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form [formGroup]="addForm" (ngSubmit)="addFormSubmit()">
+                    <div class="modal-header">
+                        <h5 class="modal-title">ADD NEW PRODUCT</h5>
+                        <button type="button" id="close_add_modal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="product_type" class="form-label">Product Type*</label>
+                                <select class="form-control" formControlName="product_type">
+                                    <option value="">--- SELECT ---</option>
+                                    <option *ngFor="let data of productTypes;" value="{{data.id}}">{{data.product_type}}</option>
+                                </select>
+                                <div *ngIf="form?.product_type?.invalid && (form?.product_type?.dirty || form?.product_type?.touched)" class="error">
+                                    <small *ngIf="form?.product_type?.errors?.required">Please select a product type</small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="category" class="form-label">Category*</label>
+                                <select class="form-control" formControlName="category">
+                                    <option value="">--- SELECT ---</option>
+                                    <option *ngFor="let data of categories;" value="{{data.id}}">{{data.category_name}}</option>
+                                </select>
+                                <div *ngIf="form?.category?.invalid && (form?.category?.dirty || form?.category?.touched)" class="error">
+                                    <small *ngIf="form?.category?.errors?.required">Please select a category</small>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <label for="product_name" class="form-label">Product Name*</label>
+                                <input type="text" class="form-control" formControlName="product_name">
+                                <div *ngIf="form?.product_name?.invalid && (form?.product_name?.dirty || form?.product_name?.touched)" class="error">
+                                    <small *ngIf="form?.product_name?.errors?.required">Please enter product name</small>
+                                    <small *ngIf="form?.product_name?.errors?.minlength">Product name should be min 3 chars</small>
+                                    <small *ngIf="form?.product_name?.errors?.maxlength">Product name should be max 50 chars</small>
+                                    <small *ngIf="form?.product_name?.errors?.pattern">Please enter valid product name</small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="product_price" class="form-label">Price*</label>
+                                <input type="text" class="form-control" formControlName="product_price">
+                                <div *ngIf="form?.product_price?.invalid && (form?.product_price?.dirty || form?.product_price?.touched)" class="error">
+                                    <small *ngIf="form?.product_price?.errors?.required">Please enter product price</small>
+                                    <small *ngIf="form?.product_price?.errors?.pattern">Please enter valid product price</small>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <label for="product_image" class="form-label">Product Image</label>
+                                <input type="file" id="product_image_add" (change)="onFileSelect($event)" accept="image/*" class="form-control">
+                            </div>                            
+                        </div>
+                    </div>
+                    <div class="modal-footer"> 
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> 
+                        <button type="submit" [disabled]="addForm.invalid || submitted" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+     </div>
+    <div class="modal fade" id="updateModalDialog" tabindex="-1">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <form [formGroup]="updateForm" (ngSubmit)="updateFormSubmit()">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">MODIFY PRODUCT DETAILS</h5>
+                        <button id="close_edit_modal" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body"> 
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="product_type" class="form-label">Product Type*</label>
+                                <select class="form-control" formControlName="product_type">
+                                    <option value="">--- SELECT ---</option>
+                                    <option *ngFor="let data of productTypes;" value="{{data.id}}">{{data.product_type}}</option>
+                                </select>
+                                <div *ngIf="editForm?.product_type?.invalid && (editForm?.product_type?.dirty || editForm?.product_type?.touched)" class="error">
+                                    <small *ngIf="editForm?.product_type?.errors?.required">Please select a product type</small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="category" class="form-label">Category*</label>
+                                <select class="form-control" formControlName="category">
+                                    <option value="">--- SELECT ---</option>
+                                    <option *ngFor="let data of categories;" value="{{data.id}}">{{data.category_name}}</option>
+                                </select>
+                                <div *ngIf="editForm?.category?.invalid && (editForm?.category?.dirty || editForm?.category?.touched)" class="error">
+                                    <small *ngIf="editForm?.category?.errors?.required">Please select a category</small>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <label for="product_name" class="form-label">Product Name*</label>
+                                <input type="text" class="form-control" formControlName="product_name">
+                                <div *ngIf="editForm?.product_name?.invalid && (editForm?.product_name?.dirty || editForm?.product_name?.touched)" class="error">
+                                    <small *ngIf="editForm?.product_name?.errors?.required">Please enter product name</small>
+                                    <small *ngIf="editForm?.product_name?.errors?.minlength">Product name should be min 3 chars</small>
+                                    <small *ngIf="editForm?.product_name?.errors?.maxlength">Product name should be max 50 chars</small>
+                                    <small *ngIf="editForm?.product_name?.errors?.pattern">Please enter valid product name</small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="product_price" class="form-label">Price*</label>
+                                <input type="tel" class="form-control" formControlName="product_price">
+                                <div *ngIf="editForm?.product_price?.invalid && (editForm?.product_price?.dirty || editForm?.product_price?.touched)" class="error">
+                                    <small *ngIf="editForm?.product_price?.errors?.required">Please enter product price</small>
+                                    <small *ngIf="editForm?.product_price?.errors?.pattern">Please enter valid product price</small>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <label for="product_image" class="form-label">Product Image</label>
+                                <input type="file" id="product_image_update" (change)="onFileSelect($event)" accept="image/*" class="form-control">
+                                <br />
+                                <img crossorigin="anonymous" src="{{serverURL}}uploads/products/{{productImage}}" width="200px" height="200px">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer"> 
+                        <input type="hidden" formControlName="id">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> 
+                        <button type="submit" [disabled]="updateForm.invalid || submitted" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+     </div>
+ </main>

@@ -1,0 +1,58 @@
+<main id="main" class="main">
+    <div class="pagetitle">
+       <h1>Modules List</h1>
+       <nav>
+          <ol class="breadcrumb">
+             <li class="breadcrumb-item"><a routerLink="/admin/dashboard">Home</a></li>
+             <li class="breadcrumb-item">Modules List</li>
+          </ol>
+       </nav>
+    </div>
+    <section class="section">
+       <div class="row">
+        <div class="col-lg-4">
+            <div class="card">
+                 <div class="card-body">
+                     <h5 class="card-title">Add New</h5>
+                     <form class="row g-3" [formGroup]="addForm" (ngSubmit)="addFormSubmit()">
+                         <div class="form-group">
+                             <label for="module_name" class="form-label">Module Name*</label>
+                             <input type="text" class="form-control form-control-line" formControlName="module_name" required>
+                             <div *ngIf="form?.module_name?.invalid && (form?.module_name?.dirty || form?.module_name?.touched)" class="error">
+                                 <small class="form-control-feedback" *ngIf="form?.module_name?.errors?.required">Please enter module name</small>
+                                 <small class="form-control-feedback" *ngIf="form?.module_name?.errors?.minlength">Module name should be min 5 chars</small>
+                                 <small class="form-control-feedback" *ngIf="form?.module_name?.errors?.maxlength">Module name should be max 25 chars</small>
+                                 <small class="form-control-feedback" *ngIf="form?.module_name?.errors?.pattern">Please enter valid module name</small>
+                             </div>
+                         </div>
+                         <div>
+                            <button type="submit" [disabled]="addForm.invalid || submitted" class="btn btn-primary">Add</button>
+                         </div>
+                     </form>
+                 </div>
+             </div>
+         </div>
+          <div class="col-lg-8">
+             <div class="card">
+                <div class="card-body">
+                   <h5 class="card-title">Modules List</h5>
+                   <table class="table datatable">
+                      <thead>
+                         <tr>
+                            <th scope="col">S.No</th>
+                            <th scope="col">Module Name</th>
+                         </tr>
+                      </thead>
+                      <tbody>
+                         <tr *ngFor="let data of list; let i = index">
+                            <td>{{ i + 1 }}</td>
+                            <td>{{ data.module_name }}</td>
+                         </tr>
+                      </tbody>
+                   </table>
+                </div>
+             </div>
+          </div>
+       </div>
+    </section>
+ </main>

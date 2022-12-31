@@ -1,0 +1,285 @@
+<div class="row">
+    <div class="col-md-12">
+        <nb-card>
+            <nb-card-header>
+                <div class="d-flex justify-content-between">
+                    <div class="dataTables_filter">
+                        <select class="form-control form-control-sm" (change)="changePageSize($event)">
+                            <option *ngFor="let size of pageSizes" value="{{size}}">{{ size }}</option>
+                        </select>
+                    </div>
+                    <div class="dataTables_filter">
+                        <button (click)="openModal(addModal)" class="btn btn-primary btn-sm action-button"><i class="fa fa-plus"></i> Add New</button>
+                    </div>
+                </div>
+            </nb-card-header>
+            <nb-card-body>
+                <div class="table-responsive" *ngIf="adminsList && adminsList.length > 0">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>S.No</th>
+                                <th>Role</th>
+                                <th>Branch</th>
+                                <th>First Name</th>
+                                <th>Email</th>
+                                <th>Mobile No</th>
+                                <th>Status</th>
+                                <th *ngIf="userAccess.edit || userAccess.delete">Actions
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td></td>
+                                <td><input type="text" class="form-control form-control-sm" name="search_string1" [(ngModel)]="search_string1" placeholder="Role"/></td>
+                                <td><input type="text" class="form-control form-control-sm" name="search_string2" [(ngModel)]="search_string2" placeholder="Branch"/></td>
+                                <td><input type="text" class="form-control form-control-sm" name="search_string3" [(ngModel)]="search_string3" placeholder="First Name"/></td>
+                                <td><input type="text" class="form-control form-control-sm" name="search_string4" [(ngModel)]="search_string4" placeholder="Email"/></td>
+                                <td><input type="text" class="form-control form-control-sm" name="search_string5" [(ngModel)]="search_string5" placeholder="Mobile No"/></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr *ngFor="let admin of adminsList | smartFilter: { 'role.role_name': search_string1, 'branch.branch_name': search_string2, first_name: search_string3, email: search_string4, mobile_number: search_string5 } | paginate: { id: 'pagination_id', itemsPerPage: pageSize, currentPage: page, totalItems: totalCount }; let i = index">
+                                <td>{{i+1}}</td>
+                                <td>{{admin.role.role_name}}</td>
+                                <td>{{admin.branch.branch_name}}</td>
+                                <td>{{admin.first_name}}</td>
+                                <td>{{admin.email}}</td>
+                                <td>{{admin.mobile_number}}</td>
+                                <td class="buttons-row">
+                                    <button *ngIf="admin.active === true" (click)="changeStatus(admin)" class="size-tiny shape-round status-success" nbButton [size]="tiny">Active</button>
+                                    <button *ngIf="admin.active !== true" (click)="changeStatus(admin)" class="size-tiny shape-round status-warning" nbButton [size]="tiny">Inactive</button>
+                                </td>
+                                <td *ngIf="userAccess.edit || userAccess.delete">
+                                    <div class="dropdown">                                        
+                                        <button (click)="openActionDropDown(i)" class="btn btn-sm" type="button">
+                                            <i class="fa fa-bars dropbtn"></i>
+                                        </button>
+                                        <div id="actionDropDown-{{i}}" class="dropdown-menu">
+                                          <a class="dropdown-item" *ngIf="userAccess.edit && currentUserData.role_type === 'Super-Admin'" (click)="generatePassword(admin.id)">Generate Password</a>
+                                          <a class="dropdown-item" *ngIf="userAccess.edit && currentUserData.id !== admin.id" (click)="edit(admin, updateModal)">Edit</a>
+                                          <a class="dropdown-item" *ngIf="userAccess.delete && currentUserData.id !== admin.id" (click)="delete(admin.id)">Delete</a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="pagination-div">
+                        <pagination-template #p="paginationApi" id="pagination_id" (pageChange)="page = $event">
+                            <ul class="pagination pagination-circled mb-0" *ngIf="(p.pages).length > 1">
+                                <li class="page-item" [class.disabled]="p.isFirstPage()"><a class="page-link" *ngIf="!p.isFirstPage()" (click)="p.previous()"><i
+                                        class="icon ion-ios-arrow-back"></i></a></li>
+                                <li class="page-item" *ngFor="let page of p.pages" [class.active]="p.getCurrent() === page.value">
+                                    <a class="page-link" (click)="p.setCurrent(page.value)" *ngIf="p.getCurrent() !== page.value">{{
+                                    page.label }}</a>
+                                    <a class="page-link" *ngIf="p.getCurrent() === page.value">{{ page.label }}</a>
+                                </li>
+                                <li class="page-item" [class.disabled]="p.isLastPage()"><a class="page-link" *ngIf="!p.isLastPage()" (click)="p.next()"><i
+                                        class="icon ion-ios-arrow-forward"></i></a></li>
+                            </ul>
+                        </pagination-template>
+                    </div>
+                </div>
+                <p *ngIf="!adminsList || adminsList.length === 0">No data available</p>
+            </nb-card-body>
+        </nb-card>
+    </div>
+</div>
+<!-- ADD MODAL -->
+<ng-template #addModal let-data let-ref="dialogRef">
+    <form [formGroup]="addForm" (ngSubmit)="addFormSubmit()">
+        <nb-card>        
+            <nb-card-header>
+            ADD NEW
+            <button id="close_add_modal" class="close action-button" type="button" (click)="ref.close()"><span aria-hidden="true">×</span></button>
+            </nb-card-header>
+            <nb-card-body>            
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="branch_id" class="control-label">Branch*</label>
+                        <select class="select2 form-control" formControlName="branch_id" autoFocus>
+                            <option value="">--- SELECT ---</option>
+                            <option *ngFor="let branch of branchesList;" value="{{branch.id}}">{{branch.branch_name}}</option>
+                        </select>
+                        <div *ngIf="form?.branch_id?.invalid && (form?.branch_id?.dirty || form?.branch_id?.touched)"
+                            class="error">
+                            <small *ngIf="form?.branch_id?.errors?.required">Please select a branch</small>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="role" class="control-label">Role*</label>
+                        <select class="select2 form-control" formControlName="role">
+                            <option value="">--- SELECT ---</option>
+                            <option *ngFor="let role of roles;" value="{{role.id}}">{{role.role_name}}</option>
+                        </select>
+                        <div *ngIf="form?.role?.invalid && (form?.role?.dirty || form?.role?.touched)"
+                            class="error">
+                            <small *ngIf="form?.role?.errors?.required">Please select a role</small>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="first_name" class="control-label">First Name*</label>
+                        <input type="text" class="form-control" formControlName="first_name">
+                        <div *ngIf="form?.first_name?.invalid && (form?.first_name?.dirty || form?.first_name?.touched)"
+                            class="error">
+                            <small *ngIf="form?.first_name?.errors?.required">Please enter first name</small>
+                            <small *ngIf="form?.first_name?.errors?.minlength">First name should be min 3
+                                chars</small>
+                            <small *ngIf="form?.first_name?.errors?.maxlength">First name should be max 30
+                                chars</small>
+                            <small *ngIf="form?.first_name?.errors?.pattern">Please enter valid first name</small>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="last_name" class="control-label">Last Name</label>
+                        <input type="text" class="form-control" formControlName="last_name">
+                        <div *ngIf="form?.last_name?.invalid && (form?.last_name?.dirty || form?.last_name?.touched)"
+                            class="error">
+                            <!-- <small *ngIf="form?.last_name?.errors?.required">Please enter last name</small> -->
+                            <small *ngIf="form?.last_name?.errors?.maxlength">Last name should be max 30
+                                chars</small>
+                            <small *ngIf="form?.last_name?.errors?.pattern">Please enter valid last name</small>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="email" class="control-label">Email*</label>
+                        <input type="text" class="form-control" formControlName="email">
+                        <div *ngIf="form?.email?.invalid && (form?.email?.dirty || form?.email?.touched)"
+                            class="error">
+                            <small *ngIf="form?.email?.errors?.required">Please enter email</small>
+                            <small *ngIf="form?.email?.errors?.email">Please enter valid email address</small>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="mobile_number" class="control-label">Mobile Number*</label>
+                        <input type="tel" class="form-control" formControlName="mobile_number">
+                        <div *ngIf="form?.mobile_number?.invalid && (form?.mobile_number?.dirty || form?.mobile_number?.touched)"
+                            class="error">
+                            <small *ngIf="form?.mobile_number?.errors?.required">Please enter mobile number</small>
+                            <small *ngIf="form?.mobile_number?.errors?.pattern">Please enter valid mobile
+                                number</small>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label for="address" class="control-label">Address</label>
+                        <textarea class="form-control" formControlName="address"></textarea>
+                        <div *ngIf="form?.address?.invalid && (form?.address?.dirty || form?.address?.touched)"
+                            class="error">
+                            <!-- <small *ngIf="form?.address?.errors?.required">Please enter address</small> -->
+                            <small *ngIf="form?.address?.errors?.minlength">Address should be max 10 chars</small>
+                            <small *ngIf="form?.address?.errors?.maxlength">Address should be max 250 chars</small>
+                            <small *ngIf="form?.address?.errors?.pattern">Please enter valid address</small>
+                        </div>
+                    </div>
+                </div>
+            </nb-card-body>
+            <nb-card-footer>
+                <button type="button" class="btn btn-danger action-button" (click)="ref.close()">Close</button>            
+                <button type="submit" [disabled]="addForm?.invalid || submitted" class="btn btn-primary action-button">Submit</button>            
+            </nb-card-footer>        
+        </nb-card>
+    </form>
+</ng-template>
+<!-- END ADD MODAL -->
+<!-- UPDATE MODAL -->
+<ng-template #updateModal let-data let-ref="dialogRef">
+    <form [formGroup]="updateForm" (ngSubmit)="updateFormSubmit()">
+        <nb-card>        
+            <nb-card-header>
+            UPDATE DETAILS
+            <button id="close_edit_modal" class="close action-button" type="button" (click)="ref.close()"><span aria-hidden="true">×</span></button>
+            </nb-card-header>
+            <nb-card-body>            
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label for="branch_id" class="control-label">Branch*</label>
+                        <select class="select2 form-control" formControlName="branch_id" autoFocus>
+                            <option value="">--- SELECT ---</option>
+                            <option *ngFor="let branch of branchesList;" value="{{branch.id}}">{{branch.branch_name}}</option>
+                        </select>
+                        <div *ngIf="editForm?.branch_id?.invalid && (editForm?.branch_id?.dirty || editForm?.branch_id?.touched)" class="error">
+                            <small *ngIf="editForm?.branch_id?.errors?.required">Please select a branch</small>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="role" class="control-label">Role*</label>
+                        <select class="select2 form-control custom-select" formControlName="role">
+                            <option value="">--- SELECT ---</option>
+                            <option *ngFor="let role of roles;" value="{{role.id}}">{{role.role_name}}</option>
+                        </select>
+                        <div *ngIf="editForm?.role?.invalid && (editForm?.role?.dirty || editForm?.role?.touched)"
+                            class="error">
+                            <small *ngIf="editForm?.role?.errors?.required">Please select a role</small>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="first_name" class="control-label">First Name*</label>
+                        <input type="text" class="form-control" formControlName="first_name">
+                        <div *ngIf="editForm?.first_name?.invalid && (editForm?.first_name?.dirty || editForm?.first_name?.touched)"
+                            class="error">
+                            <small *ngIf="editForm?.first_name?.errors?.required">Please enter first name</small>
+                            <small *ngIf="editForm?.first_name?.errors?.minlength">First name should be min 3
+                                chars</small>
+                            <small *ngIf="editForm?.first_name?.errors?.maxlength">First name should be max 30
+                                chars</small>
+                            <small *ngIf="editForm?.first_name?.errors?.pattern">Please enter valid first
+                                name</small>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="last_name" class="control-label">Last Name</label>
+                        <input type="text" class="form-control" formControlName="last_name">
+                        <div *ngIf="editForm?.last_name?.invalid && (editForm?.last_name?.dirty || editForm?.last_name?.touched)"
+                            class="error">
+                            <small *ngIf="editForm?.last_name?.errors?.required">Please enter last name</small>
+                            <small *ngIf="editForm?.last_name?.errors?.maxlength">Last name should be max 30
+                                chars</small>
+                            <small *ngIf="editForm?.last_name?.errors?.pattern">Please enter valid last name</small>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="email" class="control-label">Email*</label>
+                        <input type="text" class="form-control" formControlName="email">
+                        <div *ngIf="editForm?.email?.invalid && (editForm?.email?.dirty || editForm?.email?.touched)"
+                            class="error">
+                            <small *ngIf="editForm?.email?.errors?.required">Please enter email</small>
+                            <small *ngIf="editForm?.email?.errors?.email">Please enter valid email address</small>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="mobile_number" class="control-label">Mobile Number*</label>
+                        <input type="tel" class="form-control" formControlName="mobile_number">
+                        <div *ngIf="editForm?.mobile_number?.invalid && (editForm?.mobile_number?.dirty || editForm?.mobile_number?.touched)"
+                            class="error">
+                            <small *ngIf="editForm?.mobile_number?.errors?.required">Please enter mobile
+                                number</small>
+                            <small *ngIf="editForm?.mobile_number?.errors?.pattern">Please enter valid mobile
+                                number</small>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-12">
+                        <label for="address" class="control-label">Address</label>
+                        <textarea class="form-control" formControlName="address"></textarea>
+                        <div *ngIf="editForm?.address?.invalid && (editForm?.address?.dirty || editForm?.address?.touched)"
+                            class="error">
+                            <small *ngIf="editForm?.address?.errors?.required">Please enter address</small>
+                            <small *ngIf="editForm?.address?.errors?.minlength">Address should be max 10
+                                chars</small>
+                            <small *ngIf="editForm?.address?.errors?.maxlength">Address should be max 250
+                                chars</small>
+                            <small *ngIf="editForm?.address?.errors?.pattern">Please enter valid address</small>
+                        </div>
+                    </div>
+                </div>
+            </nb-card-body>
+            <nb-card-footer>
+                <input type="hidden" formControlName="admin_id">
+                <button type="button" class="btn btn-danger action-button" (click)="ref.close()">Close</button>            
+                <button type="submit" [disabled]="updateForm?.invalid || submitted" class="btn btn-primary action-button">Submit</button>            
+            </nb-card-footer>        
+        </nb-card>
+    </form>
+</ng-template>
+<!-- END UPDATE MODAL -->

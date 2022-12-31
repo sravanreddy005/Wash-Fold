@@ -1,0 +1,12 @@
+<aside id="sidebar" class="sidebar">
+    <ul class="sidebar-nav" id="sidebar-nav">
+       <li class="nav-item"> <a [ngClass]="routerVal == '/admin/dashboard' ? '' : 'collapsed'" class="nav-link" routerLink="/admin/dashboard"> <i class="bi bi-house"></i> <span>Dashboard</span> </a></li>
+       <li class="nav-item" *ngIf="modulesList.includes('modules-list')"> <a [ngClass]="routerVal == '/admin/modules-list' ? '' : 'collapsed'" class="nav-link" routerLink="/admin/modules-list"> <i class="bi bi-grid"></i> <span>Modules List</span> </a></li>
+       <li class="nav-item" *ngIf="modulesList.includes('roles')"> <a class="nav-link collapsed" routerLink="/admin/roles"> <i class="bi bi-person-lines-fill"></i> <span>Roles</span> </a></li>
+       <li class="nav-item" *ngIf="modulesList.includes('admin-list')"> <a class="nav-link collapsed" routerLink="/admin/admin-list"> <i class="bi bi-person"></i> <span>Admin List</span> </a></li>
+       <li class="nav-item" *ngIf="modulesList.includes('branches')"> <a class="nav-link collapsed" routerLink="/admin/branches"> <i class="bi bi-pin-map"></i> <span>Branches</span> </a></li>
+       <li class="nav-item" *ngIf="modulesList.includes('product-types')"> <a class="nav-link collapsed" routerLink="/admin/product-types"> <i class="bi bi-grid-3x2-gap"></i> <span>Product Types</span> </a></li>
+       <li class="nav-item" *ngIf="modulesList.includes('categories')"> <a class="nav-link collapsed" routerLink="/admin/categories"> <i class="bi bi-grid-3x3-gap"></i> <span>Categories</span> </a></li>
+       <li class="nav-item" *ngIf="modulesList.includes('products')"> <a class="nav-link collapsed" routerLink="/admin/products"> <i class="bi bi-grid"></i> <span>Products</span> </a></li>
+    </ul>
+ </aside>

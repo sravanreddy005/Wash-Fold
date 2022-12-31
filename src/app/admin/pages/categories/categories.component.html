@@ -1,0 +1,92 @@
+<p>product-types works!</p>
+<main id="main" class="main">
+    <div class="pagetitle">
+       <h1>Category Name</h1>
+       <nav>
+          <ol class="breadcrumb">
+             <li class="breadcrumb-item"><a routerLink="/admin/dashboard">Home</a></li>
+             <li class="breadcrumb-item">Category Name</li>
+          </ol>
+       </nav>
+    </div>
+    <section class="section">
+       <div class="row">
+        <div class="col-lg-4">
+            <div class="card">
+                 <div class="card-body">
+                     <h5 class="card-title">Add New</h5>
+                     <form class="row g-3" [formGroup]="addForm" (ngSubmit)="addFormSubmit()">
+                         <div class="form-group">
+                             <label for="category_name" class="form-label">Category Name*</label>
+                             <input type="text" class="form-control form-control-line" formControlName="category_name" required>
+                             <div *ngIf="form?.category_name?.invalid && (form?.category_name?.dirty || form?.category_name?.touched)" class="error">
+                                 <small class="form-control-feedback" *ngIf="form?.category_name?.errors?.required">Please enter product type</small>
+                                 <small class="form-control-feedback" *ngIf="form?.category_name?.errors?.pattern">Please enter valid product type</small>
+                             </div>
+                         </div>
+                         <div>
+                            <button type="submit" [disabled]="addForm.invalid || submitted" class="btn btn-primary">Add</button>
+                         </div>
+                     </form>
+                 </div>
+             </div>
+         </div>
+          <div class="col-lg-8">
+             <div class="card">
+                <div class="card-body">
+                   <h5 class="card-title">Category Name</h5>
+                   <table class="table">
+                      <thead>
+                         <tr>
+                            <th scope="col">S.No</th>
+                            <th scope="col">Category Name</th>
+                            <th scope="col" *ngIf="userAccess.edit">Actions</th>
+                         </tr>
+                      </thead>
+                      <tbody>
+                         <tr *ngFor="let data of list; let i = index">
+                            <td>{{ i + 1 }}</td>
+                            <td>{{ data.category_name }}</td>
+                            <td *ngIf="userAccess.edit">
+                                <a (click)="edit(data)" data-bs-toggle="modal" data-bs-target="#updateModalDialog"><i class="bi bi-pencil-square"></i></a>
+                                <span class="mr-10"></span>
+                                <a (click)="delete(data.id)"><i class="bi bi-trash"></i></a>
+                            </td>
+                         </tr>
+                      </tbody>
+                   </table>
+                </div>
+             </div>
+          </div>
+       </div>
+    </section>
+    <div class="modal fade" id="updateModalDialog" tabindex="-1">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <form [formGroup]="updateForm" (ngSubmit)="updateFormSubmit()">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">MODIFY DETAILS</h5>
+                        <button id="close_edit_modal" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body"> 
+                        <div class="row g-3">
+                            <div class="col-md-8">
+                                <label for="category_name" class="form-label">Category Name*</label>
+                                <input type="text" class="form-control" formControlName="category_name">
+                                <div *ngIf="editForm?.category_name?.invalid && (editForm?.category_name?.dirty || editForm?.category_name?.touched)" class="error">
+                                    <small *ngIf="editForm?.category_name?.errors?.required">Please enter product type</small>
+                                    <small *ngIf="editForm?.category_name?.errors?.pattern">Please enter valid product type</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer"> 
+                        <input type="hidden" formControlName="id">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> 
+                        <button type="submit" [disabled]="updateForm.invalid || submitted" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+     </div>
+ </main>
