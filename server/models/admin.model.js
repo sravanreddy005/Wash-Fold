@@ -158,9 +158,13 @@ AdminModels.Admin = sequelize.define('admin', {
     type: Sequelize.INTEGER,
     allowNull: false,
   },
+  branch_id: {
+    type: Sequelize.INTEGER,
+    allowNull: true,
+  },
   first_name: {
     type: Sequelize.STRING,
-    allowNull: true,
+    allowNull: false,
   },
   last_name: {
     type: Sequelize.STRING,
@@ -212,6 +216,7 @@ AdminModels.Admin = sequelize.define('admin', {
 );
 
 AdminModels.Admin.belongsTo(AdminModels.Roles, {foreignKey: 'role_id', targetKey: 'id'});
+AdminModels.Admin.belongsTo(AdminModels.Branches, {foreignKey: 'branch_id', targetKey: 'id'});
 
 /*********************** End of admins schema defining *************************/
 
@@ -247,6 +252,9 @@ AdminModels.Categories = sequelize.define('categories', {
   category_name: {
     type: Sequelize.STRING,
     unique: true
+  },
+  category_image: {
+    type: Sequelize.STRING,
   }
 },
   {
@@ -320,8 +328,49 @@ AdminModels.Products.belongsTo(AdminModels.ProductTypes, {foreignKey: 'product_t
 AdminModels.Products.belongsTo(AdminModels.Categories, {foreignKey: 'category_id', targetKey: 'id'});
 /*********************** End of products schema defining *************************/
 
-/*********************** Contact schema defining *************************/
-AdminModels.ContactInfo = sequelize.define('contact_info', {
+/*********************** Time slots schema defining *************************/
+AdminModels.TimeSlots = sequelize.define('time_slots', {
+  id: {
+    type: Sequelize.INTEGER,
+    unique: true,
+    autoIncrement: true,
+    primaryKey: true
+  },
+  type: {
+    type: Sequelize.STRING,
+  },
+  from_time: {
+    type: Sequelize.STRING,
+  },
+  to_time: {
+    type: Sequelize.STRING,
+  }
+},
+  {
+    underscored: true,
+    freezeTableName: true,
+    tableName: 'time_slots',
+    indexes: [
+      {
+        fields: ['type']
+      },
+      {
+        fields: ['from_time']
+      },
+      {
+        fields: ['to_time']
+      },
+      {
+        fields: ['type', 'from_time', 'to_time'],
+        unique: true,
+      }
+    ]
+  }
+);
+/*********************** End of time slots schema defining *************************/
+
+/*********************** Testimonials schema defining *************************/
+AdminModels.Testimonials = sequelize.define('testimonials', {
   id: {
     type: Sequelize.INTEGER,
     unique: true,
@@ -330,23 +379,38 @@ AdminModels.ContactInfo = sequelize.define('contact_info', {
   },
   name: {
     type: Sequelize.STRING,
+    allowNull: false
   },
-  email: {
-    type: Sequelize.STRING,
+  rating: {
+    type: Sequelize.FLOAT,
+    allowNull: true
   },
-  mobile_number: {
-    type: Sequelize.STRING,
-  },
-  message: {
+  description: {
     type: Sequelize.TEXT,
+    allowNull: false
+  },
+  active: {
+    type: Sequelize.BOOLEAN,
+    default: true
   }
 },
   {
     underscored: true,
     freezeTableName: true,
-    tableName: 'contact_info'
+    tableName: 'testimonials',
+    indexes: [
+      {
+        fields: ['name']
+      },
+      {
+        fields: ['rating']
+      },
+      {
+        fields: ['active']
+      }
+    ]
   }
 );
-/*********************** End of contact schema defining *************************/
+/*********************** End of testimonials schema defining *************************/
 
 module.exports = AdminModels

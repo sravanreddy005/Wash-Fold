@@ -26,6 +26,7 @@
                                     <th>First Name</th>
                                     <th>Email</th>
                                     <th>Mobile No</th>
+                                    <th>Branch</th>
                                     <th>Status</th>
                                     <th *ngIf="userAccess.edit || userAccess.delete">Actions</th>
                                 </tr>
@@ -37,15 +38,17 @@
                                     <td><input type="text" class="form-control form-control-sm" name="search_string2" [(ngModel)]="search_string2" placeholder="First Name"/></td>
                                     <td><input type="text" class="form-control form-control-sm" name="search_string3" [(ngModel)]="search_string3" placeholder="Email"/></td>
                                     <td><input type="text" class="form-control form-control-sm" name="search_string4" [(ngModel)]="search_string4" placeholder="Mobile No"/></td>
+                                    <td><input type="text" class="form-control form-control-sm" name="search_string5" [(ngModel)]="search_string5" placeholder="Branch"/></td>
                                     <td></td>
                                     <td></td>
                                 </tr>
-                                <tr *ngFor="let admin of adminsList | smartFilter: { 'role.role_name': search_string1, first_name: search_string2, email: search_string3, mobile_number: search_string4 } | paginate: { id: 'pagination_id', itemsPerPage: pageSize, currentPage: page, totalItems: totalCount }; let i = index">
+                                <tr *ngFor="let admin of adminsList | smartFilter: { 'role.role_name': search_string1, first_name: search_string2, email: search_string3, mobile_number: search_string4, 'branch.name': search_string5 } | paginate: { id: 'pagination_id', itemsPerPage: pageSize, currentPage: page, totalItems: totalCount }; let i = index">
                                     <td>{{i+1}}</td>
                                     <td>{{admin.role.role_name}}</td>
                                     <td>{{admin.first_name}}</td>
                                     <td>{{admin.email}}</td>
                                     <td>{{admin.mobile_number}}</td>
+                                    <td>{{admin.branch?.name}}</td>
                                     <td>
                                         <span *ngIf="admin.active === true" (click)="changeStatus(admin)" class="badge rounded-pill bg-primary">Active</span>
                                         <span *ngIf="admin.active !== true" (click)="changeStatus(admin)" class="badge rounded-pill bg-warning">Inactive</span>
@@ -111,7 +114,7 @@
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label for="role" class="form-label">Role*</label>
-                                <select class="select2 form-control" formControlName="role">
+                                <select class="form-control" formControlName="role">
                                     <option value="">--- SELECT ---</option>
                                     <option *ngFor="let role of roles;" value="{{role.id}}">{{role.role_name}}</option>
                                 </select>
@@ -141,7 +144,7 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="mobile_number" class="form-label">Mobile Number*</label>
-                                <input type="tel" class="form-control" formControlName="mobile_number">
+                                <input type="tel" class="form-control" formControlName="mobile_number" allowOnlyNumbers>
                                 <div *ngIf="form?.mobile_number?.invalid && (form?.mobile_number?.dirty || form?.mobile_number?.touched)" class="error">
                                     <small *ngIf="form?.mobile_number?.errors?.required">Please enter mobile number</small>
                                     <small *ngIf="form?.mobile_number?.errors?.pattern">Please enter valid mobile number</small>
@@ -187,7 +190,7 @@
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label for="role" class="control-label">Role*</label>
-                                <select class="select2 form-control custom-select" formControlName="role">
+                                <select class="form-control custom-select" formControlName="role">
                                     <option value="">--- SELECT ---</option>
                                     <option *ngFor="let role of roles;" value="{{role.id}}">{{role.role_name}}</option>
                                 </select>
@@ -221,13 +224,24 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="mobile_number" class="control-label">Mobile Number*</label>
-                                <input type="tel" class="form-control" formControlName="mobile_number">
+                                <input type="tel" class="form-control" formControlName="mobile_number" allowOnlyNumbers>
                                 <div *ngIf="editForm?.mobile_number?.invalid && (editForm?.mobile_number?.dirty || editForm?.mobile_number?.touched)"
                                     class="error">
                                     <small *ngIf="editForm?.mobile_number?.errors?.required">Please enter mobile
                                         number</small>
                                     <small *ngIf="editForm?.mobile_number?.errors?.pattern">Please enter valid mobile
                                         number</small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="branch" class="control-label">Branch</label>
+                                <select class="form-control custom-select" formControlName="branch">
+                                    <option value="">--- SELECT ---</option>
+                                    <option *ngFor="let data of branchesList;" value="{{data.id}}">{{data.branch_name}}</option>
+                                </select>
+                                <div *ngIf="editForm?.branch?.invalid && (editForm?.branch?.dirty || editForm?.branch?.touched)"
+                                    class="error">
+                                    <small *ngIf="editForm?.branch?.errors?.required">Please select a branch</small>
                                 </div>
                             </div>
                             <div class="col-md-12">

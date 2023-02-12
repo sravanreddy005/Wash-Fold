@@ -1,7 +1,7 @@
 const nodemailer = require('nodemailer');
 var handlebars = require('handlebars');
 var fs = require('fs');
-const fromMail = 'info@washandfold.com';
+const fromMail = 'info@pepisandbox.com';
 const axios = require("axios").default;
 
 const transporter = nodemailer.createTransport({
@@ -42,20 +42,22 @@ module.exports.sendMail = (toMail, replaceData, type, emailProvider = 'nodemaile
                     content: [
                       {
                         type: 'html',
-                        value: htmlToSend
+                        value: "<p>hello test mail</p>"
                       }
                     ],
                     personalizations: [
                       {
-                        to: [{email: toMail, name: 'Wash&Fold'}]
+                        // to: [{email: toMail, name: 'Wash&Fold'}]
+                        to: [{'sravanreddy.jukanti@gmail.com': toMail, name: 'Wash&Fold'}]
                       }
                     ]
                   }
+                  
 
                   var options = {
                     method: 'POST',
-                    url: 'https://api.pepipost.com/v5/mail/send',
-                    headers: {'Content-Type': 'application/json', api_key: 'f62d9474506e5008954e080765c9b29d'},
+                    url: 'https://emailapi.netcorecloud.net/v5.1/mail/send',
+                    headers: {'Content-Type': 'application/json', 'api_key': 'ed49b435d04f04584e8985e15c364947'},
                     data: bodyData
                   };
 

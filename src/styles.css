@@ -4,11 +4,11 @@
     color: #FF0000 !important;
 }
 .error-top {
-    position:fixed; 
-    top: 0px; 
-    left: 25%; 
-    width: 50%;
-    z-index:9999; 
+    position:fixed !important; 
+    top: 0px !important; 
+    left: 25% !important; 
+    width: 50% !important;
+    z-index:9999 !important; 
     margin-top: 0 !important;
 }
 

@@ -53,8 +53,6 @@ export class ProductTypesComponent {
   }
 
   edit = (data: any) => {
-    console.log('edit data', data);
-    
     this.updateForm.setValue({id: data.id, product_type: data.product_type});
   }
 

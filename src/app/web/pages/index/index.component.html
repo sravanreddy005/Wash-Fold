@@ -1,0 +1,251 @@
+<!-- Home slider start-->
+<section class="p-0 gym-slider">
+  <app-slider [sliders]="sliders" [textClass]="'text-end p-right'" [category]="'gym'" [buttonText]="'order now'">
+  </app-slider>
+</section>
+<!-- Home slider End -->
+<div class="slide-text-ct">
+  <marquee onmouseover="stop()" onmouseout="start()" class="scroll-text"> <i _ngcontent-ecr-c49="" aria-hidden="true"
+      class="fa fa-bullhorn"></i> <span class="space-5"></span> Free Pick Up And Delivery At Your Door Step
+      <b> <span class="space-5"></span> | <span class="space-5"></span> </b>
+      Easy & Quick To Order And Return Within 24 Hours. <span class="space-5"></span> | <span class="space-5"></span> We are Open from 8:30am untill 7pm, 7 days </marquee>
+</div>
+<!--section start-->
+<section class="collection section-b-space">
+  <div class="container">
+    <div class="title1">
+      <h4>We pick up, clean and return within 24 hours.       </h4>
+      <h2 class="title-inner1">Best Dry Cleaning & Laundry Service in Manchester</h2>
+    </div>
+    <div class="row partition-collection">
+      <div class="col-lg-6 col-md-6">
+        <div class="collection-block">
+          <img src="assets/img/home1.jpg" class="img-fluid" alt="about-us" />
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-6">
+        <div class="collection-block">
+          <div class="collection-content blog-detail-page">
+            <div class="row section-b-space blog-advance mt-4">
+              <div class="col-lg-12">
+                <h3>We make your life easier</h3>
+                <p>Ready to say goodbye to tedious laundry days? Introducing our Laundry Service – the hassle-free way toget your clothes cleaned! You don't need to spend your time sorting, washing, ironing and folding. Just sit back, relax and let us do all the hard work for you. With our quality service and convenient pick-up & delivery, you'll get your laundry back super clean, pressed and folded ready for your wardrobe! Enjoy effortless laundry days with Laundry Service today!</p>
+
+                <ul>
+                  <li> Convenient Pickup and Drop scheduling </li>
+                  <li> Efficient water use & Controlled washing environment</li>
+                  <li> We Collection within the order's day </li>
+                  <li> Delivery at a time of your choosing   </li>
+                  <li> Clothes independently washed and cared-for </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row partition-collection">
+      <div class="col-lg-6 col-md-6">
+        <div class="collection-block">
+          <div class="collection-content">
+            <p>Get your laundry done fast, easy, and on-demand with Laundry Service! </p>
+            <h3>We Are Committed To Cleaning Excellence! </h3>
+            <p>Get your laundry done without ever having to leave your house! Laundry Service is the perfect way to cross one more thing off your to-do list. </p>
+            <div class="collection-content blog-detail-page">
+              <div class="row blog-advance mt-4">
+                <div class="col-lg-12">
+                  <p>Our reliable and secure pick-up and delivery service saves you time, as well as trips to the laundromat. Trust us for all of your laundry needs, with our promise of great quality and same day return - you'll wonder why you ever did this yourself! </p>
+<p>We are providing laundry and dry cleaning service to a wide range of businesses in Manchester</p>
+<div class="row">
+  <div class="col-md-6">
+    <ul>
+      <li> Hotels </li>
+      <li> Saloons</li>
+      <li> Restaurants </li>
+      <li> Hospitals </li>
+    </ul>
+  </div>
+  <div class="col-md-6">
+    <ul>                    
+      <li> Airnbn </li>
+      <li> Gym </li>
+      <li> Nursery </li>
+      <li> And more... </li>
+    </ul>
+  </div>
+</div>                  
+
+                
+                </div>
+              </div>
+            </div>
+            <div _ngcontent-ghx-c65="" _ngcontent-serverapp-c93="" class="service small-section pb-0">
+              <div _ngcontent-ghx-c65="" _ngcontent-serverapp-c93="" class="row">
+                <div _ngcontent-ghx-c65="" _ngcontent-serverapp-c93="" class="col-sm-4 service-block1"><i class="fa fa-truck fa-new-icons"></i>
+                  <h5 _ngcontent-ghx-c65="" _ngcontent-serverapp-c93="">Free <br />Puckup & Drop</h5>
+                </div>
+                <div _ngcontent-ghx-c65="" _ngcontent-serverapp-c93="" class="col-sm-4 service-block1">
+                  <i class="fa fa-thumbs-up fa-new-icons"></i>
+                  <h5 _ngcontent-ghx-c65="" _ngcontent-serverapp-c93="">Hassle-free <br />Experience</h5>
+                </div>
+                <div _ngcontent-ghx-c65="" _ngcontent-serverapp-c93="" class="col-sm-4 service-block1">
+                  <i class="fa fa-hourglass-end fa-new-icons"></i>
+                  <h5 _ngcontent-ghx-c65="" _ngcontent-serverapp-c93="">Easy &amp; Quick <br />Than Ever</h5>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-6">
+        <div class="collection-block">
+          <img src="assets/img/home2.png" class="img-fluid" alt="about-us" />
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+<!--Section ends-->
+
+<!--section start-->
+<section class="collection home-prod-1 section-b-space section-t-space">
+  <div class="container">
+    <div class="title1">
+      <h4>Book Online for your Convenience       </h4>
+      <h2 class="title-inner1">Our Services</h2>
+    </div>
+    <div class="row partition-collection home-prod-img text-center justify-content-center">
+      <div class="col-md-2 mb-4" *ngFor="let category of productCategories"> 
+        <a routerLink="/pricing/{{category.id}}">
+          <img src="{{serverURL}}/uploads/categories/{{category.category_image}}" class="img-fluid" alt=""> <br />
+          <b class="mt-2">{{category.category_name}}</b>
+          <!-- <p class="mb-0">Price Starts From</p> <b>&#163; 20</b> -->
+        </a>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12 text-center mt-4">
+        <a class="btn btn-solid" routerLink="/pricing"> View Our Pricing &nbsp; <i _ngcontent-vrb-c49="" class="fa fa-angle-right fa-solid"></i> </a>
+      </div>
+    </div>
+    </div>
+    </section>
+
+<!--section start-->
+<section class="collection text-center">
+  <div class="container">
+    <div class="title1">
+      <h4>Free Pick up and Delivery at Your Door Step</h4>
+      <h2 class="title-inner1">Easy & Quick to Order</h2>
+    </div>
+    <div class="row partition-collection">
+      <div class="col-lg-3 col-md-6">
+        <div class="collection-block">
+          <img src="assets/img/home12.png" class="img-fluid" alt="">
+          <div class="collection-content text-center px-4">
+            <h3>We Collect</h3>
+            <p>Simply place your order online, selecting the items you want washed & folded, ironed, we will collect from your door step. </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6">
+        <div class="collection-block">
+          <img src="assets/img/home13.png" class="img-fluid" alt="">
+          <div class="collection-content text-center px-4">
+            <h3>We Clean </h3>
+            <p>We take your items to be washed at our own premises, making sure that our experts look after your most delicate items.
+
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6">
+        <div class="collection-block">
+          <img src="assets/img/home14.png" class="img-fluid" alt="">
+          <div class="collection-content text-center px-4">
+            <h3>We Dry</h3>
+            <p>Rest assured that your clothes dry, we ensure that all items are finished to a high standard and will look amazing when we deliver them to you.
+
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-6">
+        <div class="collection-block">
+          <img src="assets/img/home15.png" class="img-fluid" alt="">
+          <div class="collection-content text-center px-4">
+            <h3>We Fold & Deliver</h3>
+            <p>You'll get your laundry back at your door step super clean, pressed and folded ready for your wardrobe</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+<!--Section ends-->
+<section class="">
+  <div class="full-banner banner-layout-3 parallax text-center p-center"
+    style="background-image: url(assets/img/banner-bg.jpg);">
+    <div _ngcontent-serverapp-c105="" class="container">
+      <div _ngcontent-serverapp-c105="" class="row">
+        <div _ngcontent-serverapp-c105="" class="col">
+          <div _ngcontent-serverapp-c105="" class="banner-contain">
+            <h4 _ngcontent-serverapp-c105="" class="pt-0">Always at Your Service    </h4>
+            <h3 _ngcontent-serverapp-c105="">
+              Get professional & affortable <br />
+              laundry service today
+            </h3>
+            <h4 _ngcontent-serverapp-c105="">Free Pickup and Drop</h4><a _ngcontent-serverapp-c105="" class="btn btn-solid bt-green"
+              routerLink="/pricing"> Order Now &nbsp; <i _ngcontent-vrb-c49="" class="fa fa-angle-right fa-solid"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!--Testimonial start-->
+<section class="container">
+  <app-testimonials></app-testimonials>
+</section>
+<!--Testimonial ends-->
+
+<section class="section-b-space pt-4">
+  <div class="text-center">
+    <h3 class="mb-4">Some of Our Customers Who Trust Us! </h3>
+  </div> 
+  <div class="container">
+   <div class="row justify-content-center">
+   
+    <div class="col-md-8">
+      <div class="row text-center">
+        <!-- <div class="col-md-3">
+          <app-logo [logos]="logos"></app-logo> 
+        </div>-->
+        <div class="col-md-2"> 
+          <img src="assets/web/images/logos/10.png" class="img-fluid" alt="">
+        </div>
+        <div class="col-md-2"> 
+          <img src="assets/web/images/logos/10.png" class="img-fluid" alt="">
+        </div>
+        <div class="col-md-2"> 
+          <img src="assets/web/images/logos/10.png" class="img-fluid" alt="">
+        </div>
+        <div class="col-md-2"> 
+          <img src="assets/web/images/logos/10.png" class="img-fluid" alt="">
+        </div>
+        <div class="col-md-2"> 
+          <img src="assets/web/images/logos/10.png" class="img-fluid" alt="">
+        </div>
+        <div class="col-md-2"> 
+          <img src="assets/web/images/logos/10.png" class="img-fluid" alt="">
+        </div>
+      </div>
+    </div>
+   </div>
+  </div>
+</section>
+<!--  logo section End-->

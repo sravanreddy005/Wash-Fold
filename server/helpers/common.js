@@ -6,7 +6,7 @@ const crypto = require('crypto');
 const RandExp = require('randexp');
 const winston = require('../helpers/winston');
 const passwordGenRegx = /^([a-zA-Z0-9]){1}^([!@#$*_]){2}^([a-z0-9]){4}^([0-9]){2}^([A-Z0-9]){4}^([!@#$*_]){2}^([0-9]){1}$/;
-const { emailRegx, alphaRegx, alnumRegx, alnumSpecialRegx, alphaSpecialRegx, addressRegx, mobileRegx, nonHTMLRegx, numRegx, pincodeRegx, dateRegx, dateRegx2, passwordRegx, urlRegx, aadharRegx, panCardRegx, gstnRegx, passportRegx } = require('./regExp');
+const { emailRegx, alphaRegx, alnumRegx, alnumSpecialRegx, alphaSpecialRegx, addressRegx, mobileRegx, nonHTMLRegx, numRegx, pincodeRegx, dateRegx, dateRegx2, passwordRegx, urlRegx, aadharRegx, panCardRegx, gstnRegx, passportRegx, timeRegx } = require('./regExp');
 
 module.exports.genarateRandomString = (length = 8) => {
     return new Promise((resolve, reject) => {
@@ -89,6 +89,9 @@ module.exports.validateData = (type, data) => {
             break;
         case 'date2':
             return dateRegx2.test(data);
+            break;
+        case 'time':
+            return timeRegx.test(data);
             break;
         case 'password':
             return passwordRegx.test(data);

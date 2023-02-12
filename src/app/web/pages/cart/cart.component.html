@@ -1,0 +1,155 @@
+<!-- breadcrumb start -->
+<div class="breadcrumb-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="page-title">
+                    <h2>Cart</h2>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <nav aria-label="breadcrumb" class="theme-breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a [routerLink]="">Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Cart</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- breadcrumb End -->
+
+<!-- section start -->
+<section class="cart-section section-b-space">
+    <div class="container">
+        <div class="col-sm-12 empty-cart-cls text-center" *ngIf="!products.length">
+            <img src="assets/web/images/icon-empty-cart.png" class="img-fluid mb-4">
+            <h3><strong>Your Cart is Empty</strong></h3>
+            <h4>Add something to make me happy :)</h4>
+        </div>
+        <div class="row" *ngIf="products.length">
+            <div class="col-sm-8">
+                <table class="table cart-table">
+                    <thead>
+                        <tr class="table-head"> 
+                            <th scope="col">image</th>
+                            <th scope="col">product name</th>
+                            <th scope="col">price</th>
+                            <th scope="col">quantity</th>
+                            <!-- <th scope="col">action</th>  -->
+                        </tr>
+                    </thead>
+                    <tbody *ngFor="let product of products">
+                        <tr>
+                            
+                            <td>
+                                <a href="javascript:void(0)" (click)="removeItem(product)" class="icon mr-4">
+                                    <i class="fs-20 fa fa-close"></i>
+                                </a>
+                                <a>
+                                    <img [src]="product.image" [alt]="product.tittle">
+                                </a>
+                            </td>
+                            <td>
+                                <h3 class="td-color"><a>{{
+                                    product.title | titlecase }}</a></h3>
+                                <div class="mobile-cart-content row">
+                                    <div class="col">
+                                        <div class="qty-box">
+                                            <div class="input-group">
+                                                <input type="text" name="quantity" class="btn-sm form-control input-number"
+                                                    disabled [(ngModel)]="product.quantity">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <h3 class="td-color">
+                                            {{ currencySymbol }}  {{ product.price }}
+                                        </h3>
+                                    </div>
+                                    <div class="col">
+                                        <h2 class="td-color">
+                                            <a (click)="removeItem(product)" class="icon">
+                                                <i class="ti-close"></i>
+                                            </a>
+                                        </h2>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                {{ currencySymbol }} {{ product.price }}
+                            </td>
+                            <td>
+                                <div class="qty-box">
+                                    <div class="input-group">
+                                        <span class="input-group-prepend">
+                                            <button type="button" class="btn quantity-left-minus" data-type="minus"
+                                                (click)="decrement(product)">
+                                                <i class="ti-angle-left"></i>
+                                            </button>
+                                        </span>
+                                        <input type="text" name="quantity" class="form-control input-number" disabled
+                                            [(ngModel)]="product.quantity">
+                                        <span class="input-group-prepend">
+                                            <button type="button" class="btn quantity-right-plus" data-type="plus"
+                                                (click)="increment(product)">
+                                                <i class="ti-angle-right"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </td>
+                            <!-- <td>
+                                <a href="javascript:void(0)" (click)="removeItem(product)" class="icon">
+                                    <i class="ti-close"></i>
+                                </a>
+                            </td>
+                             -->
+                        </tr>
+                    </tbody>
+                </table>
+                
+            </div>
+            <div class="col-sm-4 new-cart">
+                <div class="checkout-details">
+                    <div class="order-box"> 
+                        <h3>Total Order Summary</h3>
+                        <ul class="sub-total mt-4">
+                            <li>
+                                Subtotal <span class="count">{{currencySymbol}} {{ getTotal | async}} </span>
+                            </li>
+                            <li *ngIf='products.length'>
+                                Payment Type
+                             <div class="shipping">
+                                <div class="shopping-option">
+                                    <input type="radio" name="payment_type" checked="checked" id="card">
+                                    <label for="card">Card</label>
+                                </div>
+                                <div class="shopping-option">
+                                    <input type="radio" name="payment_type" id="cash">
+                                    <label for="cash">Cash</label>
+                                </div>
+                             </div>
+                            </li>
+                        </ul>
+                        <ul class="total">
+                            <li>Total <span class="count">{{currencySymbol}} {{ getTotal | async }} </span></li>
+                        </ul>
+                    </div>
+
+                   
+                </div>
+            </div>
+        </div>
+        <div class="row cart-buttons" *ngIf='products.length'>
+            <div class="col-6">
+                <a [routerLink]="['/pricing']" class="btn btn-solid">continue shopping</a>
+            </div>
+            <div class="col-6">
+                <a (click)="handleCheckOutRoute()" class="btn btn-solid">check out</a>
+            </div>
+        </div>
+    </div>
+</section>
+<!--section end-->

@@ -1,0 +1,182 @@
+<main id="main" class="main">
+    <div class="pagetitle">
+       <h1>Testimonials</h1>
+       <nav>
+          <ol class="breadcrumb">
+             <li class="breadcrumb-item"><a routerLink="/admin/dashboard">Home</a></li>
+             <li class="breadcrumb-item">Testimonials</li>
+          </ol>
+       </nav>
+    </div>
+    <section class="section">
+       <div class="row">
+          <div class="col-lg-12">
+             <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        Testimonials
+                        <button *ngIf="userAccess.edit" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#addModalDialog"><i class="bi bi-plus-circle"></i> Add New</button>
+                    </h5>
+                   <div class="table-responsive" *ngIf="list && list.length > 0">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>S.No</th>
+                                    <th>Name</th>
+                                    <th>Rating</th>
+                                    <th>Description</th>
+                                    <th>Status</th>
+                                    <th>Last Updated On</th>
+                                    <th *ngIf="userAccess.edit || userAccess.delete">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td></td>
+                                    <td><input type="text" class="form-control form-control-sm" name="search_string1" [(ngModel)]="search_string1" placeholder="Name"/></td>
+                                    <td><input type="text" class="form-control form-control-sm" name="search_string2" [(ngModel)]="search_string2" placeholder="Rating"/></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr *ngFor="let data of list | smartFilter: { name: search_string1, rating: search_string2 } | paginate: { id: 'pagination_id', itemsPerPage: pageSize, currentPage: page, totalItems: totalCount }; let i = index">
+                                    <td>{{i+1}}</td>
+                                    <td>{{data.name}}</td>
+                                    <td>{{data.rating}}</td>
+                                    <td>{{data.description}}</td>
+                                    <td>
+                                        <span *ngIf="data.active === true" (click)="changeStatus(data)" class="badge rounded-pill bg-primary">Active</span>
+                                        <span *ngIf="data.active !== true" (click)="changeStatus(data)" class="badge rounded-pill bg-warning">Inactive</span>
+                                    </td>
+                                    <td>{{data.updatedAt | date: 'shortDate'}}</td>
+                                    <td *ngIf="userAccess.edit || userAccess.delete">
+                                        <a (click)="edit(data)" data-bs-toggle="modal" data-bs-target="#updateModalDialog"><i class="bi bi-pencil-square"></i></a>
+                                        <span class="mr-10"></span>
+                                        <a (click)="delete(data.id)"><i class="bi bi-trash"></i></a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="pagination-div">
+                            <pagination-template #p="paginationApi" id="pagination_id" (pageChange)="page = $event">
+                                <ul class="pagination pagination-circled mb-0" *ngIf="(p.pages).length > 1">
+                                    <li class="page-item" [class.disabled]="p.isFirstPage()"><a class="page-link" *ngIf="!p.isFirstPage()" (click)="p.previous()"><i
+                                            class="icon ion-ios-arrow-back"></i></a></li>
+                                    <li class="page-item" *ngFor="let page of p.pages" [class.active]="p.getCurrent() === page.value">
+                                        <a class="page-link" (click)="p.setCurrent(page.value)" *ngIf="p.getCurrent() !== page.value">{{
+                                        page.label }}</a>
+                                        <a class="page-link" *ngIf="p.getCurrent() === page.value">{{ page.label }}</a>
+                                    </li>
+                                    <li class="page-item" [class.disabled]="p.isLastPage()"><a class="page-link" *ngIf="!p.isLastPage()" (click)="p.next()"><i
+                                            class="icon ion-ios-arrow-forward"></i></a></li>
+                                </ul>
+                            </pagination-template>
+                        </div>
+                    </div>
+                    <p *ngIf="!list || list.length === 0">No data available</p>
+                </div>
+             </div>
+          </div>
+       </div>
+    </section>    
+    <div class="modal fade" id="addModalDialog" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form [formGroup]="addForm" (ngSubmit)="addFormSubmit()">
+                    <div class="modal-header">
+                        <h5 class="modal-title">ADD NEW TESTIMONIAL</h5>
+                        <button type="button" id="close_add_modal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="name" class="form-label">Name*</label>
+                                <input type="text" class="form-control" formControlName="name">
+                                <div *ngIf="form?.name?.invalid && (form?.name?.dirty || form?.name?.touched)"
+                                    class="error">
+                                    <small *ngIf="form?.name?.errors?.required">Please enter name</small>
+                                    <small *ngIf="form?.name?.errors?.minlength">Name should be min 3 chars</small>
+                                    <small *ngIf="form?.name?.errors?.maxlength">Name should be max 100 chars</small>
+                                    <small *ngIf="form?.name?.errors?.pattern">Please enter valid name</small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="rating" class="form-label">Rating</label>
+                                <input type="text" class="form-control" formControlName="rating">
+                                <div *ngIf="form?.rating?.invalid && (form?.rating?.dirty || form?.rating?.touched)" class="error">
+                                    <small *ngIf="form?.rating?.errors?.required">Please enter rating</small>
+                                    <small *ngIf="form?.rating?.errors?.pattern">Please enter valid rating</small>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <label for="description" class="form-label">Description*</label>
+                                <textarea class="form-control" formControlName="description"></textarea>
+                                <div *ngIf="form?.description?.invalid && (form?.description?.dirty || form?.description?.touched)" class="error">
+                                    <small *ngIf="form?.description?.errors?.required">Please enter description</small>
+                                    <small *ngIf="form?.description?.errors?.minlength">Description should be min 5 chars</small>
+                                    <small *ngIf="form?.description?.errors?.maxlength">Description should be max 255 chars</small>
+                                    <small *ngIf="form?.description?.errors?.pattern">Please enter valid description</small>
+                                </div>
+                            </div>                            
+                        </div>
+                    </div>
+                    <div class="modal-footer"> 
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> 
+                        <button type="submit" [disabled]="addForm.invalid || submitted" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+     </div>
+    <div class="modal fade" id="updateModalDialog" tabindex="-1">
+        <div class="modal-dialog modal-dialog-scrollable">
+            <form [formGroup]="updateForm" (ngSubmit)="updateFormSubmit()">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">MODIFY TESTIMONIAL DETAILS</h5>
+                        <button id="close_edit_modal" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body"> 
+                        <div class="row g-3">
+                            <div class="col-md-12">
+                                <label for="name" class="form-label">Name*</label>
+                                <input type="text" class="form-control" formControlName="name">
+                                <div *ngIf="editForm?.name?.invalid && (editForm?.name?.dirty || editForm?.name?.touched)"
+                                    class="error">
+                                    <small *ngIf="editForm?.name?.errors?.required">Please enter name</small>
+                                    <small *ngIf="editForm?.name?.errors?.minlength">Name should be min 3 chars</small>
+                                    <small *ngIf="editForm?.name?.errors?.maxlength">Name should be max 100 chars</small>
+                                    <small *ngIf="editForm?.name?.errors?.pattern">Please enter valid name</small>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <label for="rating" class="form-label">Rating</label>
+                                <input type="text" class="form-control" formControlName="rating">
+                                <div *ngIf="editForm?.rating?.invalid && (editForm?.rating?.dirty || editForm?.rating?.touched)" class="error">
+                                    <small *ngIf="editForm?.rating?.errors?.required">Please enter rating</small>
+                                    <small *ngIf="editForm?.rating?.errors?.pattern">Please enter valid rating</small>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <label for="description" class="form-label">Description*</label>
+                                <textarea class="form-control" formControlName="description"></textarea>
+                                <div *ngIf="editForm?.description?.invalid && (editForm?.description?.dirty || editForm?.description?.touched)" class="error">
+                                    <small *ngIf="editForm?.description?.errors?.required">Please enter description</small>
+                                    <small *ngIf="editForm?.description?.errors?.minlength">Description should be min 5 chars</small>
+                                    <small *ngIf="editForm?.description?.errors?.maxlength">Description should be max 255 chars</small>
+                                    <small *ngIf="editForm?.description?.errors?.pattern">Please enter valid description</small>
+                                </div>
+                            </div>                           
+                        </div>
+                    </div>
+                    <div class="modal-footer"> 
+                        <input type="hidden" formControlName="id">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> 
+                        <button type="submit" [disabled]="updateForm.invalid || submitted" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+     </div>
+ </main>

@@ -18,14 +18,14 @@ import { LoaderComponent } from './loader/loader.component';
         NumberDirective,
         LoaderComponent,
         TrimDirective,
-        CapitalStringDirective
+        CapitalStringDirective,
     ],
     declarations: [
         AutoFocusDirective,
         NumberDirective,
         LoaderComponent,
         TrimDirective,
-        CapitalStringDirective
+        CapitalStringDirective,
     ],
     providers: [
         // ToasterService,

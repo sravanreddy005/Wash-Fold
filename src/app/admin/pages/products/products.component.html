@@ -3,7 +3,7 @@
        <h1>Products List</h1>
        <nav>
           <ol class="breadcrumb">
-             <li class="breadcrumb-item"><a routerLink="/data/dashboard">Home</a></li>
+             <li class="breadcrumb-item"><a routerLink="/admin/dashboard">Home</a></li>
              <li class="breadcrumb-item">Products List</li>
           </ol>
        </nav>
@@ -47,7 +47,7 @@
                                     <td>{{data.category.category_name}}</td>
                                     <td>{{data.product_name}}</td>
                                     <td>{{data.product_price}}</td>
-                                    <td><img crossorigin="anonymous" src="{{serverURL}}uploads/products/{{data.product_image}}" width="100px" height="100px"></td>
+                                    <td><img src="{{serverURL}}/uploads/products/{{data.product_image}}" width="100px" height="100px"></td>
                                     <td>
                                         <span *ngIf="data.active === true" (click)="changeStatus(data)" class="badge rounded-pill bg-primary">Active</span>
                                         <span *ngIf="data.active !== true" (click)="changeStatus(data)" class="badge rounded-pill bg-warning">Inactive</span>

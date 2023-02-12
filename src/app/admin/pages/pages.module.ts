@@ -29,8 +29,9 @@ import { CategoriesComponent } from './categories/categories.component';
 import { ProductsComponent } from './products/products.component';
 import { ProfileComponent } from './profile/profile.component';
 import { BranchesComponent } from './branches/branches.component';
-// import { UsersComponent } from './users/users.component';
-// import { SettingsComponent } from './settings/settings.component';
+import { TestimonialsComponent } from './testimonials/testimonials.component';
+import { TimeSlotsComponent } from './time-slots/time-slots.component';
+import { OrdersComponent } from './orders/orders.component';
 // import { NotFoundComponent } from './not-found/not-found.component';
 
 
@@ -53,6 +54,9 @@ import { BranchesComponent } from './branches/branches.component';
     ProductsComponent,
     ProfileComponent,
     BranchesComponent,
+    TestimonialsComponent,
+    TimeSlotsComponent,
+    OrdersComponent,
     // UsersComponent,
     // SettingsComponent, 
     // NotFoundComponent,       

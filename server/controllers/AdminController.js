@@ -8,6 +8,7 @@ const { passwordRegx, alnumRegx } = require('../helpers/regExp');
 const { sendMail } = require('../helpers/email');
 const fs = require('fs');
 const Op = Sequelize.Op;
+const sharp = require('sharp');
 
 const pdf = require('html-pdf');
 const {promisify} = require('util');
@@ -29,7 +30,8 @@ const {
     deleteRecordInDB,
     deleteAllRecordInDB,
     getOneRecordWithJoinFromDB,
-    getRecordsCount
+    getRecordsCount,
+    getRecordsWithJoinLimitFromDB
 } = require('../services/AdminService');
 
 
@@ -272,6 +274,7 @@ module.exports.createAdmin = async (req, res, next) => {
             const email = (req.body.email).toLowerCase();
             let data = {
                 role_id: reqData.role,
+                branch_id: reqData.branch ? reqData.branch : null,
                 first_name: reqData.first_name,
                 last_name: reqData.last_name ? reqData.last_name : '',
                 email: email,
@@ -283,13 +286,13 @@ module.exports.createAdmin = async (req, res, next) => {
             }
             const resp = await addRecordToDB(data, 'Admin');
             if(resp){
-                // const replaceData = {
-                //     first_name: req.body.first_name,
-                //     username : email,
-                //     password : passwordObj.password,
-                //     login_url : process.env.APP_URL + '/auth/login'
-                // }
-                // const sendMailResp = await sendMail(email, replaceData, 'sendUserNamePassword', 'pepiPost');
+                const replaceData = {
+                    first_name: req.body.first_name,
+                    username : email,
+                    password : passwordObj.password,
+                    login_url : process.env.APP_URL + '/auth/login'
+                }
+                const sendMailResp = await sendMail(email, replaceData, 'sendUserNamePassword', 'pepiPost');
                 console.log('User details', {email: email, password: passwordObj.password});
                 res.status(200).json({responseCode: 1, message: "User created successfully"});   
             }else{
@@ -325,6 +328,11 @@ module.exports.getAdminsList = async (req, res, next) => {
                 attributes: ["role_name", "role_type"], 
                 where: includeWhereData,
                 required: true, 
+            },
+            { 
+                model: AdminModels.Branches, 
+                attributes: ["name"], 
+                required: false, 
             } 
         ];
         const adminResp = await getRecordsWithJoinFromDB('Admin', whereData, includeData, attributes);
@@ -368,6 +376,7 @@ module.exports.updateAdmin = async (req, res, next) => {
             const adminID = req.body.admin_id;
             let updateData = {
                 role_id: reqData.role,
+                branch_id: reqData.branch ? reqData.branch : null,
                 first_name: reqData.first_name,
                 last_name: reqData.last_name ? reqData.last_name : '',
                 email: (reqData.email).toLowerCase(),
@@ -707,7 +716,7 @@ module.exports.createProductTypes = async (req, res, next) => {
  */
 module.exports.getProductTypes = async (req, res, next) => {
     try {
-        const resp = await getRecordsFromDB('ProductTypes');
+        const resp = await getRecordsFromDB('ProductTypes', true, null, [['id', 'ASC']]);
         res.status(200).json({responseCode: 1, message: "success", data: resp});        
     }catch (err) {
         winston.info({ 'AdminController:: Exception occured in getProductTypes method': err.message });
@@ -781,6 +790,11 @@ module.exports.createCategories = async (req, res, next) => {
             let addData = {
                 category_name: req.body.category_name
             }
+            if(req.files && req.files['category_image'] && req.files['category_image'][0]['filename']){
+                addData.category_image = req.files['category_image'][0]['filename'];
+            }else{
+                addData.category_image = 'default-category.png';
+            }
             const resp = await addRecordToDB(addData, 'Categories');
             if(resp){
                 res.status(200).json({responseCode: 1, message: "Details successfully added"});
@@ -826,6 +840,9 @@ module.exports.updateCategories = async (req, res, next) => {
             const id = req.body.id;
             let updateData = {
                 category_name: req.body.category_name
+            }
+            if(req.files && req.files['category_image'] && req.files['category_image'][0]['filename']){
+                updateData.category_image = req.files['category_image'][0]['filename'];
             }
             let updateResp = await updateRecordInDB('Categories', updateData, {id: id});
             if(updateResp){
@@ -885,8 +902,12 @@ module.exports.createProducts = async (req, res, next) => {
                 product_price: reqData.product_price,
                 active: 1
             }
+            
             if(req.files && req.files['product_image'] && req.files['product_image'][0]['filename']){
-                data.product_image = req.files['product_image'][0]['filename'];
+                let filename = req.files['product_image'][0]['filename'];
+                sharp(`./server/uploads/${req.body.image_path}/${filename}`).resize(450,450).png({quality : 100}).toFile(`./server/uploads/${req.body.image_path}/resized-${filename}`);
+                // fs.unlinkSync(`./server/uploads/${req.body.image_path}/${filename}`);
+                data.product_image = 'resized-' + req.files['product_image'][0]['filename'];
             }else{
                 data.product_image = 'default-product.png';
             }
@@ -928,6 +949,31 @@ module.exports.getProducts = async (req, res, next) => {
             } 
         ];
         const resp = await getRecordsWithJoinFromDB('Products', '', joinData);
+        res.status(200).json({responseCode: 1, message: "success", products: resp});        
+    }catch (err) {
+        winston.info({ 'AdminController:: Exception occured in getProducts method': err.message });
+        return next(err);
+    }
+}
+
+/**
+ * fetching the products list 
+ */
+module.exports.getLatestProducts = async (req, res, next) => {
+    try {
+        let joinData = [ 
+            { 
+                model: AdminModels.ProductTypes, 
+                attributes: ["product_type"],
+                required: true, 
+            },
+            { 
+                model: AdminModels.Categories, 
+                attributes: ["category_name"],
+                required: true, 
+            } 
+        ];
+        const resp = await getRecordsWithJoinLimitFromDB('Products', '', joinData, 10);
         res.status(200).json({responseCode: 1, message: "success", products: resp});        
     }catch (err) {
         winston.info({ 'AdminController:: Exception occured in getProducts method': err.message });
@@ -1182,6 +1228,248 @@ module.exports.deleteBranch = async (req, res, next) => {
     }
 }
 /**************************** END MANAGE BRANCHES ***************************/
+
+/**************************** TIME SLOTS ***************************/
+/**
+ * creating the time slots 
+ */
+module.exports.createTimeSlots = async (req, res, next) => {
+    try {
+        const reqBody = req.body;
+        console.log('reqBody', reqBody);
+        if(
+            reqBody &&
+            reqBody.type &&
+            reqBody.from_time && validateData('time', reqBody.from_time) &&
+            reqBody.to_time && validateData('time', reqBody.to_time)
+        ){
+            let addData = {
+                type: req.body.type,
+                from_time: req.body.from_time,
+                to_time: req.body.to_time
+            }
+            const resp = await addRecordToDB(addData, 'TimeSlots');
+            if(resp){
+                res.status(200).json({responseCode: 1, message: "Details successfully added"});
+            }else{
+                res.status(200).json({responseCode: 0, message: "Details adding has failed"});
+            }
+        }else{
+            return res.status(400).json({responseCode: 0, errorCode: 'iw1003', message: "Bad request"});
+        }      
+    }catch (err) {
+        if (err.name == 'SequelizeUniqueConstraintError'){
+            res.status(409).json({responseCode: 0, errorCode: 'iw1005', message : "Time slot already exists with this info"});
+        }else{
+            return next(err);
+        }
+    }
+}
+
+/**
+ * fetching the time slots
+ */
+module.exports.getTimeSlots = async (req, res, next) => {
+    try {
+        const resp = await getRecordsFromDB('TimeSlots', true, null, [['from_time', 'ASC']]);
+        res.status(200).json({responseCode: 1, message: "success", data: resp});        
+    }catch (err) {
+        winston.info({ 'AdminController:: Exception occured in getTimeSlots method': err.message });
+        return next(err);
+    }
+}
+
+/**
+ * updating the time slots
+ */
+module.exports.updateTimeSlots = async (req, res, next) => {
+    try {
+        const reqBody = req.body;
+        if(
+            reqBody &&
+            reqBody.id &&
+            reqBody.type &&
+            reqBody.from_time && validateData('time', reqBody.from_time) &&
+            reqBody.to_time && validateData('time', reqBody.to_time)
+        ){
+            let id = reqBody.id;
+            let updateData = {
+                type: reqBody.type,
+                from_time: reqBody.from_time,
+                to_time: reqBody.to_time
+            }
+            let updateResp = await updateRecordInDB('TimeSlots', updateData, {id: id});
+            if(updateResp){
+                return res.status(200).json({responseCode: 1,message: "Details updated successfully"});
+            }else{
+                return res.status(200).json({responseCode: 0,message: "Details updating has failed"});
+            }
+        }        
+    }catch (err) {
+        winston.info({ 'AdminController:: Exception occured in updateTimeSlots method': err.message });
+        return next(err);
+    }
+}
+
+/**
+ * delete the time slots
+ */
+module.exports.deleteTimeSlots = async (req, res, next) => {
+    try {
+        if(req.body && req.body.id){
+            const deleteResp = await deleteRecordInDB('TimeSlots', {id: req.body.id});
+            if(deleteResp){
+                res.status(200).json({responseCode: 1, message: "success"});
+            }else{
+                res.status(200).json({responseCode: 0, message: "failure"});
+            }
+        }else{
+            res.status(400).json({responseCode: 0, errorCode: 'iw1003', message : "Bad Request"});
+        }
+    }catch (err) {
+        winston.info({ 'AdminController:: Exception occured in deleteTimeSlots method': err.message });
+        return next(err);
+    }
+}
+
+/**************************** END TIME SLOTS ***************************/
+
+/**************************** MANAGE TESTIMONIALS ***************************/
+/**
+ * creating the testimonials 
+ */
+module.exports.addTestimonials = async (req, res, next) => {
+    try {
+        const reqData = req.body;
+        if(
+            reqData && 
+            reqData.name && validateData('alnumSpecial', reqData.name) &&
+            reqData.description && validateData('nonHTML', reqData.description) &&
+            validateData('float', reqData.rating)
+        ){
+            let data = {
+                name: reqData.name,
+                description: reqData.description,
+                rating: reqData.rating ? reqData.rating : null,
+                active: 1
+            }
+            const resp = await addRecordToDB(data, 'Testimonials');
+            if(resp){
+                res.status(200).json({responseCode: 1, message: "Testimonial added successfully"});   
+            }else{
+                res.status(200).json({responseCode: 0, message: "Testimonial adding has failed"}); 
+            } 
+        }else{
+            res.status(400).json({responseCode: 0, errorCode: 'iw1003', message : "Bad Request"});
+        }    
+    }catch (err) {
+        winston.info({ 'AdminController:: Exception occured in addTestimonials method': err.message });
+        return next(err);        
+    }
+}
+
+/**
+ * fetching the testimonials list 
+ */
+module.exports.getTestimonials = async (req, res, next) => {
+    try {
+        const resp = await getRecordsFromDB('Testimonials');
+        res.status(200).json({responseCode: 1, message: "success", list: resp});        
+    }catch (err) {
+        winston.info({ 'AdminController:: Exception occured in getTestimonials method': err.message });
+        return next(err);
+    }
+}
+
+/**
+ * fetching the testimonials list 
+ */
+module.exports.getActiveTestimonials = async (req, res, next) => {
+    try {
+        const resp = await getRecordsFromDB('Testimonials', true, {active: true}, [['created_at', 'DESC']]);
+        res.status(200).json({responseCode: 1, message: "success", list: resp});        
+    }catch (err) {
+        winston.info({ 'AdminController:: Exception occured in getTestimonials method': err.message });
+        return next(err);
+    }
+}
+
+/**
+ * updating the testimonial info
+ */
+ module.exports.updateTestimonials = async (req, res, next) => {
+    try {
+        const reqData = req.body;
+        if(
+            reqData && 
+            reqData.id && 
+            reqData.name && validateData('alnumSpecial', reqData.name) &&
+            reqData.description && validateData('nonHTML', reqData.description) &&
+            validateData('float', reqData.rating)
+        ){
+            let data = {
+                name: reqData.name,
+                description: reqData.description,
+                rating: reqData.rating ? reqData.rating : null,
+            }
+            const resp = await updateRecordInDB('Testimonials', data, {id: reqData.id});
+            if(resp){
+                res.status(200).json({responseCode: 1, message: "Details updated successfully"});   
+            }else{
+                res.status(200).json({responseCode: 0, message: "Details updating has failed"}); 
+            } 
+        }else{
+            res.status(400).json({responseCode: 0, errorCode: 'iw1003', message : "Bad Request"});
+        }    
+    }catch (err) {
+        winston.info({ 'AdminController:: Exception occured in updateTestimonials method': err.message });
+        return next(err);
+    }
+}
+
+/**
+ * updating the status of testimonial
+ */
+ module.exports.updateTestimonialStatus = async (req, res, next) => {
+    try {        
+        if(req.body.id && (req.body.current_status || req.body.current_status === false)){
+            const status = (req.body.current_status) ? false : true;
+            let updateResp = await updateRecordInDB('Testimonials', {active: status}, {id: req.body.id});
+            if(updateResp){
+                return res.status(200).json({responseCode: 1, message: "success"});
+            }else{
+                return res.status(200).json({responseCode: 0, message: "Status updating has failed"});
+            }
+        }else{
+            return res.status(400).json({responseCode: 0, errorCode: 'iw1003', message : "Invalid request"});
+        }               
+    }catch (err) {
+        winston.info({ 'AdminController:: Exception occured in updateTestimonialStatus method': err.message });
+        return next(err);
+    }
+}
+
+/**
+ * delete the testimonials 
+ */
+module.exports.deleteTestimonials = async (req, res, next) => {
+    try {
+        if(req.body && req.body.id){
+            const deleteResp = await deleteRecordInDB('Testimonials', {id: req.body.id});
+            if(deleteResp){
+                res.status(200).json({responseCode: 1, message: "success"});
+            }else{
+                res.status(200).json({responseCode: 0, message: "failure"});
+            }
+        }else{
+            res.status(400).json({responseCode: 0, errorCode: 'iw1003', message : "Bad Request"});
+        }
+    }catch (err) {
+        winston.info({ 'AdminController:: Exception occured in deleteTestimonials method': err.message });
+        return next(err);
+    }
+}
+/**************************** END MANAGE TESTIMONIALS ***************************/
 
 /**************************** DOWNLOAD FILES ***************************/
  module.exports.downLoadFiles = async (req, res, next) => {

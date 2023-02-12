@@ -24,6 +24,10 @@
                                  <small class="form-control-feedback" *ngIf="form?.category_name?.errors?.pattern">Please enter valid product type</small>
                              </div>
                          </div>
+                         <div class="form-group">
+                            <label for="category_image_add" class="form-label">Category Image</label>
+                            <input type="file" id="category_image_add" (change)="onFileSelect($event)" accept="image/*" class="form-control">
+                         </div>
                          <div>
                             <button type="submit" [disabled]="addForm.invalid || submitted" class="btn btn-primary">Add</button>
                          </div>
@@ -77,6 +81,10 @@
                                     <small *ngIf="editForm?.category_name?.errors?.required">Please enter product type</small>
                                     <small *ngIf="editForm?.category_name?.errors?.pattern">Please enter valid product type</small>
                                 </div>
+                            </div>
+                            <div class="col-md-8">
+                                <label for="category_image_edit" class="form-label">Category Image</label>
+                                <input type="file" id="category_image_edit" (change)="onFileSelect($event)" accept="image/*" class="form-control">
                             </div>
                         </div>
                     </div>

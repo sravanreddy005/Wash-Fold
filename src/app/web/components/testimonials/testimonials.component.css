@@ -1,0 +1,7 @@
+.testimonial .testimonial-slider .media img {
+    border-radius: 100%;
+    border: 1px solid #dddddd;
+    padding: 5px !important;
+    height: 75px !important;
+    width: 75px !important;
+}

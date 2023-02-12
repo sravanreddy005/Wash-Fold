@@ -31,7 +31,7 @@ export class AdminListComponent {
   search_string2: any;
   search_string3: any;
   search_string4: any;
-
+  search_string5: any;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -53,6 +53,7 @@ export class AdminListComponent {
 
     this.addForm = this.formBuilder.group({
       role: ['', [Validators.required]],
+      branch: [''],
       first_name: ['', [Validators.required, Validators.pattern(alphaRegx), Validators.minLength(3), Validators.maxLength(30)]],
       last_name: ['', [Validators.pattern(alphaRegx), Validators.maxLength(30)]],
       email: ['', [Validators.required, Validators.email]],
@@ -62,6 +63,7 @@ export class AdminListComponent {
     this.updateForm = this.formBuilder.group({
       admin_id: ['', [Validators.required]],
       role: ['', [Validators.required]],
+      branch: [''],
       first_name: ['', [Validators.required, Validators.pattern(alphaRegx), Validators.minLength(3), Validators.maxLength(30)]],
       last_name: ['', [Validators.pattern(alphaRegx), Validators.maxLength(30)]],
       email: ['', [Validators.required, Validators.email]],
@@ -71,21 +73,11 @@ export class AdminListComponent {
 
     this.getUsersList();
     this.getRoles();
+    this.getBranchesList();
   }
 
   changePageSize = (event: any) => {    
     this.pageSize = event.target.value;
-  }
-
-  openActionDropDown = (i: any) => {       
-    let dropdowns = document.getElementsByClassName("dropdown-menu");
-    for (let i = 0; i < dropdowns.length; i++) {
-      var openDropdown = dropdowns[i];
-      if (openDropdown.classList.contains('show')) {
-        openDropdown.classList.remove('show');
-      }
-    } 
-    document.getElementById("actionDropDown-" + i)?.classList.toggle("show");
   }
 
   getUsersList = async() => {
@@ -107,10 +99,18 @@ export class AdminListComponent {
     }
   }
 
+  getBranchesList = async() => {
+    let resp = await this.adminService.getData('getBranches');  
+    if(resp && resp.responseCode === 1 && resp.list){
+      this.branchesList = resp.list;
+    }   
+  }
+
   edit = (data: any) => {
     const updateData = {
       admin_id: data.id,
       role: data.role_id,
+      branch: data.branch ? data.branch : null,
       first_name: data.first_name,
       last_name: data.last_name,
       email: data.email,

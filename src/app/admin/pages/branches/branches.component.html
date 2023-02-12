@@ -114,7 +114,7 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="branch_mobile_number" class="form-label">Mobile Number*</label>
-                                <input type="text" class="form-control" formControlName="branch_mobile_number">
+                                <input type="text" class="form-control" formControlName="branch_mobile_number" allowOnlyNumbers>
                                 <div *ngIf="form?.branch_mobile_number?.invalid && (form?.branch_mobile_number?.dirty || form?.branch_mobile_number?.touched)"
                                     class="error">
                                     <small *ngIf="form?.branch_mobile_number?.errors?.required">Please enter mobile number</small>
@@ -134,8 +134,8 @@
                                 <input class="form-control" formControlName="address">
                                 <div *ngIf="form?.address?.invalid && (form?.address?.dirty || form?.address?.touched)" class="error">
                                     <small *ngIf="form?.address?.errors?.required">Please enter address</small>
-                                    <small *ngIf="form?.address?.errors?.minlength">Last name should be min 5 chars</small>
-                                    <small *ngIf="form?.address?.errors?.maxlength">Last name should be max 100 chars</small>
+                                    <small *ngIf="form?.address?.errors?.minlength">Address should be min 5 chars</small>
+                                    <small *ngIf="form?.address?.errors?.maxlength">Address should be max 100 chars</small>
                                     <small *ngIf="form?.address?.errors?.pattern">Please enter valid address</small>
                                 </div>
                             </div>
@@ -187,7 +187,7 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="branch_mobile_number" class="form-label">Mobile Number*</label>
-                                <input type="text" class="form-control" formControlName="branch_mobile_number">
+                                <input type="text" class="form-control" formControlName="branch_mobile_number" allowOnlyNumbers>
                                 <div *ngIf="editForm?.branch_mobile_number?.invalid && (editForm?.branch_mobile_number?.dirty || editForm?.branch_mobile_number?.touched)"
                                     class="error">
                                     <small *ngIf="editForm?.branch_mobile_number?.errors?.required">Please enter mobile number</small>
@@ -207,8 +207,8 @@
                                 <input class="form-control" formControlName="address">
                                 <div *ngIf="editForm?.address?.invalid && (editForm?.address?.dirty || editForm?.address?.touched)" class="error">
                                     <small *ngIf="editForm?.address?.errors?.required">Please enter address</small>
-                                    <small *ngIf="editForm?.address?.errors?.minlength">Last name should be min 5 chars</small>
-                                    <small *ngIf="editForm?.address?.errors?.maxlength">Last name should be max 100 chars</small>
+                                    <small *ngIf="editForm?.address?.errors?.minlength">Address should be min 5 chars</small>
+                                    <small *ngIf="editForm?.address?.errors?.maxlength">Address should be max 100 chars</small>
                                     <small *ngIf="editForm?.address?.errors?.pattern">Please enter valid address</small>
                                 </div>
                             </div>

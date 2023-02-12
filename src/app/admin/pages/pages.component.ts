@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation  } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ElementRef  } from '@angular/core';
 
 @Component({
   selector: 'ngx-pages',
@@ -8,10 +8,15 @@ import { Component, OnInit, ViewEncapsulation  } from '@angular/core';
 })
 export class PagesComponent implements OnInit{
 
-  constructor() {}
+  constructor(
+    private elementRef: ElementRef
+  ) {}
 
   ngOnInit(): void {
-           
+    const s = document.createElement("script");
+    s.type = "text/javascript";
+    s.src = "assets/js/bootstrap.bundle.min.js";
+    this.elementRef.nativeElement.appendChild(s);      
   }
   
 }

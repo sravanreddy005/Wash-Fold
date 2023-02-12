@@ -1,6 +1,7 @@
 const sequelize = require("./db-config");
 const AuthModels = require('../models/auth.model');
 const AdminModels = require('../models/admin.model');
+const OrdersModels = require('../models/orders.model');
 
 const synncDB = async() => {
   try {
@@ -13,4 +14,4 @@ const synncDB = async() => {
 
 synncDB();
 
-module.exports = { AdminModels, AuthModels };
+module.exports = { AdminModels, AuthModels, OrdersModels };

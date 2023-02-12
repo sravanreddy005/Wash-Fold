@@ -1,45 +1,125 @@
-<footer class="footer bg-image" data-background="../../../../assets/web/images/dark-pattern-bg2.jpg">
-    <div class="container">
-        <div class="section-titles wow" data-splitting>
-        <!--    <h5>CONTACT US</h5>
-            <h2>HIC prices are as competative as other international couriers in India</h2>
-             end section-titles -->
-            <div class="footer-inner my-4">
-                <div class="row">
-                    <div class="col-lg-5 col-md-5 wow fadeIn">
-                        
-                            <h6>Customer Care:</h6>
-                        <div class="row">
-                        <div class="col-lg-6"> <h6>Phone</h6>
-                        <p><a href="tel:+919513311116">+91 9513311116 </a>‬</p>
-                     </div> 
-                       <div class="col-lg-6"> <h6>Email</h6>
-                        <p><a href="mailto:jagadish@hiclogistics.com">jagadish@hiclogistics.com</a></p>
-                        </div></div> 
+<!--footer section -->
+<footer [class]="class">
+    <!--footer section -->
+    <section class="bgdefault-color pb-4">
+        <div class="container">
+            <div class="row footer-theme
+                partition-f pb-4">
+                <div class="col-lg-4 col-md-6">
+                    <div class="footer-title footer-mobile-title">
+                        <h4>about</h4>
                     </div>
-                    <!-- end col-3 -->
-                    <div class="col-lg-4 wow fadeIn">
-                        <h6>Head Office Address</h6>
-                        <address>
-                            No.1-4-25/1,Pragathi Nagar, <br />Yadadri Bhongir, Telangana-508116
-                        </address>
+                    <div class="footer-contant">
+                        <div class="footer-logo"><img alt="logo" src="assets/web/images/icon/logo3.png"
+                                style="width: 60%;"></div>
+                        <p>We are equipped with the best of technology which means your clothing will be handled with
+                            special care, our detergents are top quality and we guarantee completely spotless results.
+                        </p> <br />
+                        <!-- <b class="mt-4">Follow Us On Soical Media</b> -->
+                        <div class="footer-social mt-1">
+                            <ul>
+                                <li>Follow Us: </li>
+                                <li><a href=""><i aria-hidden="true" class="fa fa-facebook"></i></a></li>
+                                <li><a href=""><i aria-hidden="true" class="fa fa-twitter"></i></a></li>
+                                <li><a href=""><i aria-hidden="true" class="fa fa-instagram"></i></a></li>
+                                <li><a href=""><i aria-hidden="true" class="fa fa-youtube"></i></a></li>
+                            </ul>
+                        </div>
+
+
                     </div>
-                    <!-- end col-3 -->
-                    <div class="col-lg-3 wow fadeIn">
-                        <h6>Follow us</h6>
-                        <a href="https://www.facebook.com/Hindustan-International-Courier-103372598371916" target="_blank">Facebook</a> <br />
-                      <!--  <a href="#">Twitter</a> <br />
-                        <a href="#">Youtube</a>-->
-                    </div>
-                    <!-- end col-4 -->
                 </div>
-                <!-- end row -->
+                <div class="col">
+                    <div class="sub-title">
+                        <div class="footer-title">
+                            <h4>About</h4>
+                        </div>
+                        <div class="footer-contant">
+                            <ul>
+                                <li><a routerLink="/about-us"><i class="fa fa-angle-right fa-solid"></i> &nbsp; About
+                                        Us</a></li>
+                                <li><a routerLink="/contact"><i class="fa fa-angle-right fa-solid"></i> &nbsp; Contact
+                                        Us</a></li>
+                                <li><a routerLink="/"><i class="fa fa-angle-right fa-solid"></i> &nbsp; Faqs</a>
+                                </li>
+                                <li><a routerLink="/"><i class="fa fa-angle-right fa-solid"></i> &nbsp; Terms &
+                                        Conditions</a></li>
+                                <li><a routerLink="/"><i class="fa fa-angle-right fa-solid"></i> &nbsp; Privacy
+                                        Policy</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="sub-title">
+                        <div class="footer-title">
+                            <h4>Residential
+                            </h4>
+                        </div>
+                        <div class="footer-contant">
+                            <ul>
+                                <li> <a routerLink="/residential-services"><i class="fa fa-angle-right fa-solid"></i> &nbsp; Service
+                                        Wash </a></li>
+                                <li><a routerLink="/residential-services"><i class="fa fa-angle-right fa-solid"></i> &nbsp; Dry
+                                        Clean </a></li>
+                                <li><a routerLink="/residential-services"><i class="fa fa-angle-right fa-solid"></i> &nbsp; Ironing
+                                    </a></li>
+                                <li><a routerLink="/residential-services"><i class="fa fa-angle-right fa-solid"></i> &nbsp;
+                                        Duvet/bulky items </a></li>
+                                <li><a routerLink="/residential-services"><i class="fa fa-angle-right fa-solid"></i> &nbsp;
+                                        Alteration </a></li>
+                                <li><a routerLink="/residential-services"><i class="fa fa-angle-right fa-solid"></i> &nbsp; Bedding
+                                        &amp; Curtain </a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="sub-title">
+                        <div class="footer-title">
+                            <h4>Commercial </h4>
+                        </div>
+                        <div class="footer-contant">
+                            <ul>
+                                <li><a routerLink="/commercial-services"><i class="fa fa-angle-right fa-solid"></i> &nbsp; Airbnb </a></li>
+                                <li><a routerLink="/commercial-services"><i class="fa fa-angle-right fa-solid"></i> &nbsp; Hotels </a></li>
+                                <li><a routerLink="/commercial-services"><i class="fa fa-angle-right fa-solid"></i> &nbsp; Hospitals </a></li>
+                                <li><a routerLink="/commercial-services"><i class="fa fa-angle-right fa-solid"></i> &nbsp; Saloons </a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="sub-title">
+                        <div class="footer-title">
+                            <h4>Contact</h4>
+                        </div>
+                        <div class="footer-contant">
+                            <ul class="contact-list">
+                                <li><i class="fa fa-map-marker"></i>4 Whitchurch Road, Withington,
+                                    Greater Manchester, <br /> M20 1FX</li>
+                                <li><i class="fa fa-phone"></i> 077600 606319 / 077600 606320 </li>
+                                <li><i class="fa fa-envelope-o"></i>
+                                    info@washandfoldlaundrette.com </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <!-- end footer-inner -->
-            <div class="footer-bottom" data-splitting> <span>&copy; 2020 &nbsp; - &nbsp; All Rights Reserved - HIC</span> </div>
-            <!-- end footer-bottom -->
+
         </div>
-        <!-- end container -->
-    </div>
+    </section>
+
+    <section class="bgdark-color ft-clr-wht pt-0 sub-footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12 col-md-12 text-center py-2" style=" color: #ffffff !important;">
+                    <p>Wash &amp; Fold <i class="fa fa-copyright" aria-hidden="true"></i>
+                        {{ today | date:'y'}}. All Right Reserved.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
 </footer>
-<button onclick="topFunction()" id="myBtn" title="Go to top"> <img src="../../../../assets/web/images/flight-1.svg" /> </button>
+<!--footer section end -->

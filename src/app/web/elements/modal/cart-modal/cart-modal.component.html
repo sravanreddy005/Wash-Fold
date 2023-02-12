@@ -1,0 +1,36 @@
+<!-- Add to cart modal popup start-->
+<ng-template #cartModal let-modal>
+    <div class="modal-body">
+        <div class="container-fluid p-0">
+            <div class="row">
+                <div class="col-12">
+                    <div class="modal-bg addtocart">
+                        <button type="button" id="close-cart-modal" class="close" (click)="modal.dismiss('Cross click')">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <div class="media">
+                            <a>
+                                <img class="img-fluid pro-img" [src]="product?.image" [alt]="product?.tittle">
+                            </a>
+                            <div class="media-body align-self-center text-center">
+                                <a>
+                                    <h6>
+                                        <i class="fa fa-check"></i>Item
+                                        <span>{{ product.title | titlecase }}</span>
+                                        <span> successfully added to your Cart</span>
+                                    </h6>
+                                </a>
+                                <div class="buttons">
+                                    <a [routerLink]="['/cart']" class="view-cart btn btn-solid">Your cart</a>
+                                    <a [routerLink]="['/checkout']" class="checkout btn btn-solid">Check out</a>
+                                    <a (click)="modal.dismiss('Cross click')" class="continue btn btn-solid">Continue shopping</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+<!-- Add to cart modal popup end-->

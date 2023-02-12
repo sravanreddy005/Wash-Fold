@@ -1,73 +1,161 @@
-<!-- Start header -->
-<div class="custom-cursor"></div>
-<!-- end custom-cursor -->
-
-<!-- <div class="preloader">
-    <div class="layers"> <span></span> <span></span> <span></span> </div>
-    <div class="container-fluid">
-        <figure><img src="../../../../assets/web/images/hic-logo-final.svg" srcset="../../../../assets/web/images/hic-logo-final.svg" alt="Image"></figure>
-        <small data-splitting>Still loading</small>
-        <div class="percentage">
-            <div id="percentage"></div>
+<header class="sticky" [ngClass]="class" [class.fixed]="stick && sticky">
+    <div class="mobile-fix-option"></div>
+    <div class="top-header" *ngIf="topbar">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="header-contact">
+              <ul>
+                <li><i class="fa fa-bullhorn" aria-hidden="true"></i>We are Open from 8:30am untill 7pm, 7 days </li>
+              </ul>
+            </div>
+          </div>
+          <div class="col-lg-6 text-end">
+            <div class="header-contact">
+              <ul>
+                <li><i class="fa fa-phone" aria-hidden="true"></i>Call Us: 123 - 456 - 7890</li>
+              </ul>
+            </div>
+          </div>  
         </div>
-        <div class="loadbar"></div>
+      </div>
     </div>
-</div> -->
-
-<div class="page-transition">
-    <div class="layers"> <span></span> <span></span> <span></span> </div>
-    <!-- end layers -->
-</div>
-<!-- end page-transition -->
-<div class="menu-navigation">
-    <div class="layers"> <span></span> <span></span> <span></span> </div>
-    <!-- end layers -->
-</div>
-<!-- end menu-navigation -->
-<div class="menu-container">
-    <ul class="main-menu">
-        <li><a href="/branches">Our Branches</a></li>
-        <li><a href="/partner-us">Partner Us</a></li>
-        <li><a href="/contact">Contact Us</a></li>
-    </ul>
-</div>
-<!-- end menu-container -->
-<nav class="topbar">
-    <div class="logo">
-        <a href="">
-            <img src="../../../../assets/web/images/hic-logo-final.svg"
-                srcset="../../../../assets/web/images/hic-logo-final.svg" alt="Image">
-        </a>
-    </div>
-    <!-- end logo -->
-    <div class="languages">
-        <ul>
-            <!--  <li><a href="#">+91 9513311118</a></li>  -->
-            <li><a href="mailto:jagadish@hiclogistics.com">jagadish@hiclogistics.com</a></li>
-        </ul>
-    </div>
-    <!-- end languages -->
-    <div class="hamburger-menu">
-        <div class="texts"> <b data-splitting>Menu</b> <b data-splitting>Close</b> </div>
-        <!-- end texts -->
-        <div class="svg circle" id="hamburger-btn">
-            <svg xmlns="http://www.w3.org/2000/svg" width="70" height="70" viewBox="0 0 200 200">
-                <g stroke-width="6.5" stroke-linecap="round">
-                    <path d="M72 82.286h28.75" fill="#009100" fill-rule="evenodd" stroke="#fff" />
-                    <path
-                        d="M100.75 103.714l72.482-.143c.043 39.398-32.284 71.434-72.16 71.434-39.878 0-72.204-32.036-72.204-71.554"
-                        fill="none" stroke="#fff" />
-                    <path d="M72 125.143h28.75" fill="#009100" fill-rule="evenodd" stroke="#fff" />
-                    <path
-                        d="M100.75 103.714l-71.908-.143c.026-39.638 32.352-71.674 72.23-71.674 39.876 0 72.203 32.036 72.203 71.554"
-                        fill="none" stroke="#fff" />
-                    <path d="M100.75 82.286h28.75" fill="#009100" fill-rule="evenodd" stroke="#fff" />
-                    <path d="M100.75 125.143h28.75" fill="#009100" fill-rule="evenodd" stroke="#fff" />
-                </g>
-            </svg>
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="main-menu">
+            <div class="menu-left">
+              <!-- <app-left-menu></app-left-menu> -->
+              <div class="brand-logo">
+                <a routerLink="" id="headerlogo">
+                  <img [src]="themeLogo" class="img-fluid" alt="logo">
+                </a>
+              </div>
+            </div>
+            <div class="menu-right pull-right">
+              <div>
+                <div class="main-navbar">
+                  <div id="mainnav">
+                    <div class="toggle-nav" (click)="handleMainMenuToggle()">
+                      <i class="fa fa-bars sidebar-bar"></i>
+                    </div>
+                    <ul class="nav-menu" [class.opennav]="mainMenuToggle">
+                
+                      <li class="back-btn">
+                        <div class="mobile-back text-end" (click)="handleMainMenuToggle()">
+                          <span>Back</span>
+                          <i class="fa fa-angle-right ps-2" aria-hidden="true"></i>
+                        </div>
+                      </li>
+                
+                      <!-- <li>
+                        <a routerLink="" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">
+                          Home
+                        </a>                                     
+                      </li> -->
+                      <li>
+                        <a routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">
+                           Services <i class="fa fa-angle-down fa-solid"></i>
+                        </a>
+                        <ul class="nav-submenu">
+                          <li><a routerLink="/residential-services">  Residential <i class="fa fa-angle-right fa-solid"></i> </a>
+                            <ul class="nav-sub-childmenu">
+                              <li><a routerLink="/residential-services">Service Wash </a></li>
+                              <li><a routerLink="/residential-services">Dry Clean </a></li>
+                              <li><a routerLink="/residential-services">Ironing </a></li>
+                              <li><a routerLink="/residential-services">Duvet/bulky items </a></li>
+                              <li><a routerLink="/residential-services">Alteration </a></li>
+                              <li><a routerLink="/residential-services">Bedding & Curtain </a></li>
+                            </ul>
+                          </li>
+                          <li><a routerLink="/commercial-services">  Commercial  <i class="fa fa-angle-right fa-solid"></i></a>
+                            <ul class="nav-sub-childmenu">
+                              <li><a routerLink="/commercial-services">  Airbnb </a></li>
+                              <li><a routerLink="/commercial-services">  Hotels </a></li>
+                              <li><a routerLink="/commercial-services">  Hospitals </a></li>
+                              <li><a routerLink="/commercial-services">  Saloons </a></li> 
+                            </ul>
+                          </li>
+                        </ul>                                    
+                      </li>
+                      <li>
+                        <a routerLink="/pricing" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">
+                          Pricing
+                        </a>                                     
+                      </li>
+                      <li>
+                        <a routerLink="/about-us" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">
+                          About Us
+                        </a>                                     
+                      </li>
+                      <li>
+                        <a routerLink="/contact" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">
+                          Contact
+                        </a>                                     
+                      </li>
+                    </ul>
+                  </div>
+                </div>                
+              </div>
+              <!-- CART STARTING -->
+              <div>
+                <div class="icon-nav">
+                  <ul>
+                    <li> <a class="btn btn-solid" routerLink="/pricing">Order Now &nbsp; <i class="fa fa-angle-right fa-solid"></i> </a> </li>                   
+                    <li class="onhover-div mobile-cart">
+                      <div>
+                        <a routerLink="/cart" style="padding-right: 15px;">
+                          <img src="assets/web/images/icon/cart.png" class="img-fluid" alt="">
+                          <i class="ti-shopping-cart"></i>
+                        </a>
+                      </div>
+                     <span class="cart_qty_cls">{{ products.length }}</span>
+                      <!-- <ul class="show-div shopping-cart" *ngIf='!products.length'>
+                        <h5>Your cart is currently empty.</h5>
+                      </ul>
+                      <ul class="show-div shopping-cart" *ngIf='products.length'>
+                        <li *ngFor="let product of products">
+                          <div class="media">
+                            <a routerLink="">
+                              <img class="me-3" [src]="product?.image" [alt]="product?.tittle">
+                            </a>
+                            <div class="media-body">
+                              <a routerLink="">
+                                <h4>{{ product?.title }}</h4>
+                              </a>
+                              <h4>
+                                <span>
+                                  {{ product?.quantity }} x 
+                                  {{ product?.price }}
+                                </span>
+                              </h4>
+                            </div>
+                          </div>
+                          <div class="close-circle" (click)="removeItemFromCart(product)">
+                            <a href="javascript:void(0)"><i class="fa fa-times" aria-hidden="true"></i></a>
+                          </div>
+                        </li>
+                        <li>
+                          <div class="total">
+                            <h5>subtotal : <span>{{ getTotal | async }} {{ currencySymbol }}</span></h5>
+                          </div>
+                        </li>
+                        <li>
+                          <div class="buttons">
+                            <a routerLink="/cart" class="view-cart">view cart</a>
+                            <a routerLink="/checkout" class="checkout">checkout</a>
+                          </div>
+                        </li>
+                      </ul>-->
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <!-- CART ENDING -->
+            </div>
+          </div>
         </div>
-        <!-- end svg -->
+      </div>
     </div>
-    <!-- end hamburger-menu -->
-</nav>
-<!-- end of header -->
+  </header>
+  

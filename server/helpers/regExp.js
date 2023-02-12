@@ -1,7 +1,7 @@
-module.exports.mobileRegx = /^[6-9][0-9]{9}$/;
+module.exports.mobileRegx = /^(07\d{8,12}|447\d{7,11})$/;
 module.exports.passwordRegx = /^(?=.*\d)(?=.*[!@#$%^&*_])(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
 module.exports.emailRegx = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,13}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-module.exports.pincodeRegx = /([1-9]{1}[0-9]{5}|[1-9]{1}[0-9]{3}\\s[0-9]{3})/;
+module.exports.pincodeRegx = /^([A-Z]{1,2}\d[A-Z\d]? ?\d[A-Z]{2}|GIR ?0A{2})$/;
 module.exports.alnumRegx = /^[a-zA-z0-9]+([\s][a-zA-Z0-9]+)*$/;
 module.exports.alphaRegx = /^[a-zA-z]+([\s][a-zA-Z]+)*$/;
 module.exports.alphaSpecialRegx = /^[a-zA-z]+([\s][_-a-zA-Z]+)*$/;
@@ -16,6 +16,7 @@ module.exports.currencyCodeRegx = /^([a-zA-Z]){3}$/;
 module.exports.dayMonthRegx = /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])$/;
 module.exports.dateRegx = /^\d{4}[\/\-](0?[1-9]|1[012])[\/\-](0?[1-9]|[12][0-9]|3[01])$/;
 module.exports.dateRegx2 = /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/;
+module.exports.timeRegx = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/;
 module.exports.aadharRegx = /(^[2-9]{1}[0-9]{3}\s[0-9]{4}\s[0-9]{4}$)|(^[2-9]{1}[0-9]{3}[0-9]{4}[0-9]{4}$)/;
 module.exports.panCardRegx = /[A-Za-z]{5}[0-9]{4}[A-Za-z]{1}$/;
 module.exports.gstnRegx = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;

@@ -1,0 +1,110 @@
+<!-- breadcrumb start -->
+<div class="breadcrumb-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="page-title">
+                    <h2>ORDER STATUS</h2>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <nav aria-label="breadcrumb" class="theme-breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a [routerLink]="">Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">About Us</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- breadcrumb End -->
+
+<!-- thank-you section start -->
+<section class="section-b-space light-layout">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="success-text">
+                    <i class="fa fa-check-circle" aria-hidden="true"></i>
+                    <h2>thank you</h2>
+                    <p>Your order is successfully placed</p>
+                    <p>Transaction ID: {{orderID}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Section ends -->
+
+<!-- order-detail section start -->
+<section class="section-b-space">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="product-order">
+                    <h3>your order details</h3>
+                    <div class="row product-order-detail" *ngFor="let order of orderProducts">
+                        <div class="col-3">
+                            <img src="{{serverURL}}/uploads/products/{{order.product.product_image}}" alt="{{order.product.product_name}}" class="img-fluid">
+                        </div>
+                        <div class="col-3 order_detail">
+                            <div>
+                                <h4>product name</h4>
+                                <h5>{{order.product.product_name}}</h5>
+                            </div>
+                        </div>                        
+                        <div class="col-3 order_detail">
+                            <div>
+                                <h4>quantity</h4>
+                                <h5>{{order.quantity}}</h5>
+                            </div>
+                        </div>
+                        <div class="col-3 order_detail">
+                            <div>
+                                <h4>price</h4>
+                                <h5>{{order.product_price}}{{currency}}</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="total-sec">
+                        <ul>
+                            <li><strong>Total</strong>: &nbsp;&nbsp;{{totalAmount}}{{currency}}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4" *ngIf="orderDetails && orderDetails.createdAt">
+                <div class="row order-success-sec">
+                    <div class="col-sm-12">
+                        <h4>summery</h4>
+                        <ul class="order-detail">
+                            <li>order ID: {{orderID}}</li>
+                            <li>Order Date: {{orderDetails.createdAt | date: 'medium'}}</li>
+                            <li>Pickup Date: {{orderDetails.pickup_date | date: 'mediumDate'}}</li>
+                            <li>Pickup Time Slot: {{orderDetails.pickup_time_slot}}</li>
+                            <li>Drop Date: {{orderDetails.drop_date | date: 'mediumDate'}}</li>
+                            <li>Drop Time Slot: {{orderDetails.drop_time_slot}}</li>
+                        </ul>
+                    </div>                    
+                    <div class="col-sm-12 mt-15">
+                        <hr />
+                        <h4>shipping address</h4>
+                        <ul class="order-detail">
+                            <li>{{orderDetails.address1}}</li>
+                            <li>{{orderDetails.address2}}</li>
+                            <li>{{orderDetails.city}}, {{orderDetails.pincode}}</li>
+                        </ul>
+                    </div>
+                    <div class="col-sm-12 payment-mode mt-15">
+                        <hr />
+                        <h4>payment method</h4>
+                        <p>{{orderDetails.payment_type}}</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+<!-- Section ends -->

@@ -1,8 +1,8 @@
 
-export const mobileRegx = /^[6-9][0-9]{9}$/;
+export const mobileRegx = /^[0][0-9]{10}$/;
 export const passwordRegx = /^(?=.*\d)(?=.*[!@#$%^&*_])(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
 export const emailRegx = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,13}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-export const pincodeRegx = /([1-9]{1}[0-9]{5}|[1-9]{1}[0-9]{3}\\s[0-9]{3})/;
+export const pincodeRegx = /^([A-Z]{1,2}\d[A-Z\d]? ?\d[A-Z]{2}|GIR ?0A{2})$/;
 export const alnumRegx = /^[a-zA-z0-9]+([\s][a-zA-Z0-9]+)*$/;
 export const alphaRegx = /^[a-zA-z]+([\s][a-zA-Z]+)*$/;
 export const numRegx = /^[0-9]+$/;
@@ -16,6 +16,7 @@ export const currencyCodeRegx = /^([a-zA-Z]){3}$/;
 export const dayMonthRegx = /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])$/;
 export const dateRegx = /^\d{4}[\/\-](0?[1-9]|1[012])[\/\-](0?[1-9]|[12][0-9]|3[01])$/;
 export const dateRegx2 = /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-]\d{4}$/;
+export const timeRegx = /^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/;
 export const fileRegx = /^([a-zA-Z0-9\s_\\.\-:])+(.csv|.xls|.xlsx)+$/;
 export const floatRegx = /^(?!0\d)\d*(\.\d+)?$/;
 export const floatWithNegativeRegx = /^-?[0-9]\d*(\.\d+)?$/;

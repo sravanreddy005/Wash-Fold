@@ -11,6 +11,9 @@ import { CategoriesComponent } from './categories/categories.component';
 import { ProductsComponent } from './products/products.component';
 import { ProfileComponent } from './profile/profile.component';
 import { BranchesComponent } from './branches/branches.component';
+import { TestimonialsComponent } from './testimonials/testimonials.component';
+import { TimeSlotsComponent } from './time-slots/time-slots.component';
+import { OrdersComponent } from './orders/orders.component';
 
 import { AuthGuard } from '../helpers/auth.guard';
 
@@ -59,6 +62,18 @@ const routes: Routes = [{
     {
       path: 'branches',
       component: BranchesComponent,
+    },
+    {
+      path: 'time-slots',
+      component: TimeSlotsComponent,
+    },
+    {
+      path: 'orders',
+      component: OrdersComponent,
+    },
+    {
+      path: 'testimonials',
+      component: TestimonialsComponent,
     },
     // {
     //   path: 'access-denied',

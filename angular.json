@@ -4,7 +4,7 @@
   "newProjectRoot": "projects",
   "projects": {
     "admindashboard": {
-      "projectType": "application",
+      "projectType": "application",      
       "schematics": {},
       "root": "",
       "sourceRoot": "src",
@@ -18,15 +18,27 @@
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
+            "allowedCommonJsDependencies": [
+              "mousetrap",
+              "hammerjs",
+              "@ks89/angular-modal-gallery",
+              "lodash",
+              "rxjs",
+              "rxjs/operators",
+              "rxjs/Subject",
+              "rxjs/Subscription"
+            ],
             "assets": [
               "src/favicon.ico",
               "src/assets"
             ],
             "styles": [
+              "node_modules/font-awesome/scss/font-awesome.scss",
               "src/styles.css"
             ],
             "scripts": [
-              "src/assets/js/main.js"
+              "src/assets/js/main.js",
+              "node_modules/isotope-layout/dist/isotope.pkgd.min.js"
             ]
           },
           "configurations": {

@@ -1,0 +1,177 @@
+<!-- breadcrumb start -->
+<div class="breadcrumb-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="page-title">
+                    <h2>Checkout</h2>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <nav aria-label="breadcrumb" class="theme-breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a [routerLink]="">Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Checkout</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- breadcrumb End -->
+
+<section class="section-b-space">
+    <div class="container">
+        <div class="checkout-page">
+            <div class="checkout-form">
+                <form [formGroup]="checkoutForm" (ngSubmit)="checkoutFormSubmit()">
+                    <div class="row">
+                        <div class="col-lg-8 col-sm-12 col-xs-12">
+                            <div class="checkout-title">
+                                <h3>Address Details</h3>
+                            </div>
+                            <div class="row check-out">
+                                <div class="form-group col-md-6 col-sm-6 col-xs-12">
+                                    <div class="field-label">First Name*</div>
+                                    <input type="text" formControlName="first_name" placeholder="" autocomplete="off">
+                                    <div *ngIf="form?.first_name?.invalid && (form?.first_name?.dirty || form?.first_name?.touched)" class="text text-danger">
+                                        <small *ngIf="form?.first_name?.errors?.required">Please enter first name</small>
+                                        <small *ngIf="form?.first_name?.errors?.pattern">Please enter valid name</small>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6 col-sm-6 col-xs-12">
+                                    <div class="field-label">Last Name*</div>
+                                    <input type="text" formControlName="last_name" placeholder="" autocomplete="off">
+                                    <div *ngIf="form?.last_name?.invalid && (form?.last_name?.dirty || form?.last_name?.touched)" class="text text-danger">
+                                        <small *ngIf="form?.last_name?.errors?.required">Please enter last name</small>
+                                        <small *ngIf="form?.last_name?.errors?.pattern">Please enter valid name</small>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6 col-sm-6 col-xs-12">
+                                    <div class="field-label">Mobile Number*</div>
+                                    <input type="text" formControlName="mobile_number" maxlength="11" placeholder="" autocomplete="off">
+                                    <div *ngIf="form?.mobile_number?.invalid && (form?.mobile_number?.dirty || form?.mobile_number?.touched)" class="text text-danger">
+                                        <small *ngIf="form?.mobile_number?.errors?.required">Please enter mobile number</small>
+                                        <small *ngIf="form?.mobile_number?.errors?.pattern">Please enter valid mobile number</small>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6 col-sm-6 col-xs-12">
+                                    <div class="field-label">Email Address*</div>
+                                    <input type="text" formControlName="email" placeholder="" autocomplete="off">
+                                    <div *ngIf="form?.email?.invalid && (form?.email?.dirty || form?.email?.touched)" class="text text-danger">
+                                        <small *ngIf="form?.email?.errors?.required">Please enter email</small>
+                                        <small *ngIf="form?.email?.errors?.pattern">Please enter valid email</small>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6 col-sm-6 col-xs-12">
+                                    <div class="field-label">Zipcode*</div>
+                                    <input type="text" formControlName="pincode" placeholder="" autocomplete="off">
+                                    <div *ngIf="form?.pincode?.invalid && (form?.pincode?.dirty || form?.pincode?.touched)" class="text text-danger">
+                                        <small *ngIf="form?.pincode?.errors?.required">Please enter pincode</small>
+                                        <small *ngIf="form?.pincode?.errors?.pattern">Please enter valid pincode</small>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6 col-sm-6 col-xs-12">
+                                    <div class="field-label">City</div>
+                                    <input type="text" formControlName="city" placeholder="" autocomplete="off" readonly>
+                                    <div *ngIf="form?.city?.invalid && (form?.city?.dirty || form?.city?.touched)" class="text text-danger">
+                                        <small *ngIf="form?.city?.errors?.required">Please enter city</small>
+                                        <small *ngIf="form?.city?.errors?.pattern">Please enter valid city</small>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                                    <div class="field-label">Address Line1*</div>
+                                    <input type="text" formControlName="address1" placeholder="" autocomplete="off">
+                                    <div *ngIf="form?.address1?.invalid && (form?.address1?.dirty || form?.address1?.touched)" class="text text-danger">
+                                        <small *ngIf="form?.address1?.errors?.required">Please enter address</small>
+                                        <small *ngIf="form?.address1?.errors?.pattern">Please enter valid address</small>
+                                        <small *ngIf="form?.address1?.errors?.pattern">Address line1 should be max 100 chars</small>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-12 col-sm-12 col-xs-12">
+                                    <div class="field-label">Address Line2*</div>
+                                    <input type="text" formControlName="address2" placeholder="" autocomplete="off">
+                                    <div *ngIf="form?.address2?.invalid && (form?.address2?.dirty || form?.address2?.touched)" class="text text-danger">
+                                        <small *ngIf="form?.address2?.errors?.required">Please enter address</small>
+                                        <small *ngIf="form?.address2?.errors?.pattern">Please enter valid address</small>
+                                        <small *ngIf="form?.address2?.errors?.pattern">Address line2 should be max 100 chars</small>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6 col-sm-6 col-xs-12">
+                                    <div class="field-label">Pick-Up Date*</div>
+                                    <input type="date" formControlName="pickup_date" min="{{pickupDateMin}}" (change)="handlePickupDateChange()" autocomplete="off">
+                                    <div *ngIf="form?.pickup_date?.invalid && (form?.pickup_date?.dirty || form?.pickup_date?.touched)" class="text text-danger">
+                                        <small *ngIf="form?.pickup_date?.errors?.required">Please enter pick up date</small>
+                                    </div>
+                                </div>                                 
+                                <div class="form-group col-md-6 col-sm-6 col-xs-12">
+                                    <div class="field-label">Pick-Up Time Slot*</div>
+                                    <select formControlName="pickup_time_slot">
+                                        <option value="" selected>Select Slot</option>
+                                        <option *ngFor="let slot of pickupTimeSlots" value="{{json.stringify(slot)}}">{{slot.from_time}} - {{slot.to_time}}</option>
+                                    </select>
+                                    <div *ngIf="form?.pickup_time_slot?.invalid && (form?.pickup_time_slot?.dirty || form?.pickup_time_slot?.touched)" class="text text-danger">
+                                        <small *ngIf="form?.pickup_time_slot?.errors?.required">Please select a pick up slot</small>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-6 col-sm-6 col-xs-12">
+                                    <div class="field-label">Drop Date*</div>
+                                    <input type="date" formControlName="drop_date" min="{{dropDateMin}}" autocomplete="off">
+                                    <div *ngIf="form?.drop_date?.invalid && (form?.drop_date?.dirty || form?.drop_date?.touched)" class="text text-danger">
+                                        <small *ngIf="form?.drop_date?.errors?.required">Please enter drop date</small>
+                                    </div>
+                                </div>                                 
+                                <div class="form-group col-md-6 col-sm-6 col-xs-12">
+                                    <div class="field-label">Drop Time Slot*</div>
+                                    <select formControlName="drop_time_slot">
+                                        <option value="" selected>Select Slot</option>
+                                        <option *ngFor="let slot of dropTimeSlots" value="{{json.stringify(slot)}}">{{slot.from_time}} - {{slot.to_time}}</option>
+                                    </select>
+                                    <div *ngIf="form?.drop_time_slot?.invalid && (form?.drop_time_slot?.dirty || form?.drop_time_slot?.touched)" class="text text-danger">
+                                        <small *ngIf="form?.drop_time_slot?.errors?.required">Please select a drop slot</small>
+                                    </div>
+                                </div>                               
+                            </div>                         
+                        </div> 
+                        <div class="col-sm-4 new-cart">
+                            <div class="checkout-details">
+                                <div class="order-box"> 
+                                    <h3>Total Order Summary</h3>
+                                    <ul class="sub-total mt-4">
+                                        <li>
+                                            Subtotal <span class="count">{{currencySymbol}} {{ getTotal | async}} </span>
+                                        </li>
+                                        <li *ngIf='products.length'>
+                                            Payment Type
+                                         <div class="shipping">
+                                            <div class="shopping-option">
+                                                <input type="radio" name="payment_type" checked="checked" id="card">
+                                                <label for="card">Card</label>
+                                            </div>
+                                            <div class="shopping-option">
+                                                <input type="radio" name="payment_type" id="cash">
+                                                <label for="cash">Cash</label>
+                                            </div>
+                                         </div>
+                                        </li>
+                                    </ul>
+                                    <ul class="total">
+                                        <li>Total <span class="count">{{currencySymbol}} {{ getTotal | async }} </span></li>
+                                    </ul>                                    
+                                </div>
+                                <div class="payment-box" *ngIf='products.length'>
+                                    <div class="text-end">
+                                        <button type="submit" class="btn-solid btn" [disabled]="checkoutForm.invalid || submitted">
+                                           Place Order
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- section end -->

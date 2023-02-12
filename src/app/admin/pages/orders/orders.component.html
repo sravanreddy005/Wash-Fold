@@ -1,0 +1,282 @@
+<main id="main" class="main">
+    <div class="pagetitle">
+       <h1>Orders List</h1>
+       <nav>
+          <ol class="breadcrumb">
+             <li class="breadcrumb-item"><a routerLink="/admin/dashboard">Home</a></li>
+             <li class="breadcrumb-item">Orders List</li>
+          </ol>
+       </nav>
+    </div>
+    <section class="section" *ngIf="!showOrderDetails">
+       <div class="row">
+          <div class="col-lg-12">
+             <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        Orders List
+                    </h5>
+                   <div class="table-responsive" *ngIf="ordersList && ordersList.length > 0">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <!-- <th>S.No</th> -->
+                                    <th>Order ID</th>
+                                    <th>Customer Name</th>
+                                    <!-- <th>Email</th> -->
+                                    <th>Mobile</th>
+                                    <th>Pincode</th>
+                                    <!-- <th>Address1</th> -->
+                                    <th>Status</th>
+                                    <th>Ordered On</th>
+                                    <th *ngIf="userAccess.edit || userAccess.delete">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <!-- <td></td> -->
+                                    <td><input type="text" class="form-control form-control-sm" name="search_string1" [(ngModel)]="search_string1" placeholder="Order ID"/></td>
+                                    <td><input type="text" class="form-control form-control-sm" name="search_string2" [(ngModel)]="search_string2" placeholder="Name"/></td>
+                                    <td><input type="text" class="form-control form-control-sm" name="search_string3" [(ngModel)]="search_string3" placeholder="Email"/></td>
+                                    <td><input type="text" class="form-control form-control-sm" name="search_string4" [(ngModel)]="search_string4" placeholder="Mobile"/></td>
+                                    <td></td>
+                                    <!-- <td></td>
+                                    <td></td> -->
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr *ngFor="let data of ordersList | smartFilter: { order_id: search_string1, first_name: search_string2, email: search_string3, mobile_number: search_string4 } | paginate: { id: 'pagination_id', itemsPerPage: pageSize, currentPage: page, totalItems: totalCount }; let i = index">
+                                    <!-- <td>{{i+1}}</td> -->
+                                    <td>{{data.order_id}}</td>
+                                    <td>{{data.first_name}} {{data.last_name}}</td>
+                                    <!-- <td>{{data.email}}</td> -->
+                                    <td>{{data.mobile_number}}</td>
+                                    <td>{{data.pincode}}</td>
+                                    <!-- <td>{{data.address1}}</td> -->
+                                    <td>
+                                        <span class="badge rounded-pill {{statusClassConfig[data.order_status]}}" (click)="changeOrderStatus(data)" data-bs-toggle="modal" data-bs-target="#updateModalDialog" title="Change Status">{{data.order_status}}</span>
+                                        <!-- <span *ngIf="data.order_status === 'OUT FOR PICKUP'" class="badge rounded-pill bg-warning" (click)="changeOrderStatus(data)" data-bs-toggle="modal" data-bs-target="#updateModalDialog">{{data.order_status | titlecase}}</span>
+                                        <span *ngIf="data.order_status === 'IN PROCESS'" class="badge rounded-pill bg-warning" (click)="changeOrderStatus(data)" data-bs-toggle="modal" data-bs-target="#updateModalDialog">{{data.order_status | titlecase}}</span>
+                                        <span *ngIf="data.order_status === 'OUT FOR DELIVERY'" class="badge rounded-pill bg-success" (click)="changeOrderStatus(data)" data-bs-toggle="modal" data-bs-target="#updateModalDialog">{{data.order_status | titlecase}}</span>
+                                        <span *ngIf="data.order_status === 'DELIVERED'" class="badge rounded-pill bg-success" (click)="changeOrderStatus(data)" data-bs-toggle="modal" data-bs-target="#updateModalDialog">{{data.order_status | titlecase}}</span> -->
+                                    </td>
+                                    <td>{{data.createdAt | date: 'short'}}</td>                                    
+                                    <td *ngIf="userAccess.edit || userAccess.delete">
+                                      <a class="dropdown-item d-flex align-items-center" (click)="viewOrderDetails(data)"><i class="bi bi-eye"></i> Details</a>
+                                        <!-- <li class="dropdown pe-3 action-dropdown">
+                                            <a class="nav-link d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
+                                                <i class="bi bi-menu-button"></i>
+                                             </a>
+                                            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow action-dropdown-menu">
+                                                <li>
+                                                    <a class="dropdown-item d-flex align-items-center" (click)="viewOrderDetails(data)"><i class="bi bi-eye"></i> View Order Details</a>
+                                                </li>
+                                                <li>
+                                                    <hr class="dropdown-divider">
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item d-flex align-items-center" (click)="changeOrderStatus(data)" data-bs-toggle="modal" data-bs-target="#updateModalDialog"><i class="bi bi-pencil-square"></i> Change Status</a>
+                                                </li>
+                                                 <li>
+                                                    <hr class="dropdown-divider">
+                                                </li>
+                                                <li>
+                                                    <a class="dropdown-item d-flex align-items-center" *ngIf="userAccess.delete" (click)="delete(data.id)"> <i class="bi bi-trash"></i> Delete</a>
+                                                </li>  
+                                            </ul>
+                                         </li> -->
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="pagination-div">
+                            <pagination-template #p="paginationApi" id="pagination_id" (pageChange)="page = $event">
+                                <ul class="pagination pagination-circled mb-0" *ngIf="(p.pages).length > 1">
+                                    <li class="page-item" [class.disabled]="p.isFirstPage()"><a class="page-link" *ngIf="!p.isFirstPage()" (click)="p.previous()"><i
+                                            class="icon ion-ios-arrow-back"></i></a></li>
+                                    <li class="page-item" *ngFor="let page of p.pages" [class.active]="p.getCurrent() === page.value">
+                                        <a class="page-link" (click)="p.setCurrent(page.value)" *ngIf="p.getCurrent() !== page.value">{{
+                                        page.label }}</a>
+                                        <a class="page-link" *ngIf="p.getCurrent() === page.value">{{ page.label }}</a>
+                                    </li>
+                                    <li class="page-item" [class.disabled]="p.isLastPage()"><a class="page-link" *ngIf="!p.isLastPage()" (click)="p.next()"><i
+                                            class="icon ion-ios-arrow-forward"></i></a></li>
+                                </ul>
+                            </pagination-template>
+                        </div>
+                    </div>
+                    <p *ngIf="!ordersList || ordersList.length === 0">No data available</p>
+                </div>
+             </div>
+          </div>
+       </div>
+    </section> 
+    <section class="section" *ngIf="showOrderDetails">
+       <div class="row">
+          <div class="col-lg-12">
+             <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        Order Details
+                        <button (click)="back()" class="btn btn-primary btn-sm"><i class="bi bi-arrow-left-circle"></i> Back</button>
+                    </h5>
+                    <div class="row">
+                        <div class="col col-md-6 col-lg-6">
+                            <form class="order-details">
+                                <div class="row mb-3">
+                                  <label class="col-sm-4 col-form-label">Order ID</label>
+                                  <div class="col-sm-8">
+                                    {{orderDetails.order_id}}
+                                  </div>
+                                </div>
+                                <div class="row mb-3">
+                                  <label class="col-sm-4 col-form-label">First Name</label>
+                                  <div class="col-sm-8">
+                                    {{orderDetails.first_name}}
+                                  </div>
+                                </div>
+                                <div class="row mb-3">
+                                  <label class="col-sm-4 col-form-label">Last Name</label>
+                                  <div class="col-sm-8">
+                                    {{orderDetails.last_name}}
+                                  </div>
+                                </div>
+                                <div class="row mb-3">
+                                  <label class="col-sm-4 col-form-label">Email</label>
+                                  <div class="col-sm-8">
+                                    {{orderDetails.email}}
+                                  </div>
+                                </div>
+                                <div class="row mb-3">
+                                  <label class="col-sm-4 col-form-label">Mobile</label>
+                                  <div class="col-sm-8">
+                                    {{orderDetails.mobile_number}}
+                                  </div>
+                                </div>
+                                <div class="row mb-3">
+                                  <label class="col-sm-4 col-form-label">Pincode</label>
+                                  <div class="col-sm-8">
+                                    {{orderDetails.pincode}}
+                                  </div>
+                                </div>
+                                <div class="row mb-3">
+                                  <label class="col-sm-4 col-form-label">Address1</label>
+                                  <div class="col-sm-8">
+                                    {{orderDetails.address1}}
+                                  </div>
+                                </div>
+                                <div class="row mb-3">
+                                  <label class="col-sm-4 col-form-label">Address2</label>
+                                  <div class="col-sm-8">
+                                    {{orderDetails.address2}}
+                                  </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col col-md-6 col-lg-6">
+                            <form class="order-details">
+                                <div class="row mb-3">
+                                  <label class="col-sm-4 col-form-label">City</label>
+                                  <div class="col-sm-8">
+                                    {{orderDetails.city}}
+                                  </div>
+                                </div>
+                                <div class="row mb-3">
+                                  <label class="col-sm-4 col-form-label">Pickup Date</label>
+                                  <div class="col-sm-8">
+                                    {{orderDetails.pickup_date | date: 'short'}}
+                                  </div>
+                                </div>
+                                <div class="row mb-3">
+                                  <label class="col-sm-4 col-form-label">Pickup Time Slot</label>
+                                  <div class="col-sm-8">
+                                    {{orderDetails.first_name}}
+                                  </div>
+                                </div>
+                                <div class="row mb-3">
+                                  <label class="col-sm-4 col-form-label">Drop Date</label>
+                                  <div class="col-sm-8">
+                                    {{orderDetails.drop_date | date: 'short'}}
+                                  </div>
+                                </div>
+                                <div class="row mb-3">
+                                  <label class="col-sm-4 col-form-label">Drop Time Slot</label>
+                                  <div class="col-sm-8">
+                                    {{orderDetails.drop_time_slot}}
+                                  </div>
+                                </div>
+                                <div class="row mb-3">
+                                  <label class="col-sm-4 col-form-label">Payment Type</label>
+                                  <div class="col-sm-8">
+                                    {{orderDetails.payment_type}}
+                                  </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <h6 class="card-title">Products</h6>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>S.No</th>
+                                    <th>Image</th>
+                                    <th>Product Name</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let data of orderDetails.orders; let i = index">
+                                    <td>{{i+1}}</td>
+                                    <td><img src="{{serverURL}}/uploads/products/{{data.product.product_image}}" width="100px" height="100px"></td>
+                                    <td>{{data.product.product_name}}</td>
+                                    <td>{{data.product_price}}</td>
+                                    <td>{{data.quantity}}</td>
+                                    <td>{{data.total_price}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+             </div>
+          </div>
+       </div>
+    </section> 
+ </main>
+
+ <div class="modal fade" id="updateModalDialog" tabindex="-1">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <form [formGroup]="changeStatusForm" (ngSubmit)="changeStatusFormSubmit()">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">UPDATE ORDER STATUS</h5>
+                    <button id="close_edit_modal" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body"> 
+                    <div class="row g-3">
+                        <div class="col-md-8">
+                            <label for="status" class="form-label">Order Status*</label>
+                            <select class="form-control" formControlName="status">
+                                <option value="PENDING">PENDING</option>
+                                <option value="OUT FOR PICKUP">OUT FOR PICKUP</option>
+                                <option value="IN PROCESS">IN PROCESS</option>
+                                <option value="OUT FOR DELIVERY">OUT FOR DELIVERY</option>
+                                <option value="DELIVERED">DELIVERED</option>
+                            </select>
+                            <div *ngIf="form?.status?.invalid && (form?.status?.dirty || form?.status?.touched)" class="error">
+                                <small *ngIf="form?.status?.errors?.required">Please select a status</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer"> 
+                    <input type="hidden" formControlName="id">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> 
+                    <button type="submit" [disabled]="changeStatusForm.invalid || submitted" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </form>
+    </div>
+ </div>

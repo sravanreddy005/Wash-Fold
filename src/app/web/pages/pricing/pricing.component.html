@@ -1,0 +1,104 @@
+<!-- breadcrumb start -->
+<div class="breadcrumb-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6 col-6">
+                <div class="page-title">
+                    <h2>Pricing</h2>
+                </div>
+            </div>
+            <div class="col-sm-6 col-6">
+                <nav aria-label="breadcrumb" class="theme-breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a [routerLink]="">Home</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Pricing</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- breadcrumb End -->
+
+<div class="title1 mt-4"> 
+    <div class="">
+        <div class="switch-field">
+            <span *ngFor="let type of productTypes; let i = index">
+                <input type="radio" id="radio-{{i}}" (click)="handleProductTypeChange(type.id)" name="switch-one" value="{{type.product_type}}" [checked]="type.id === activeProductType"/>
+                <label for="radio-{{i}}">{{type.product_type}}</label>
+            </span>
+        </div>
+        <!-- <div class="radio-option row">
+            <span class="col-md-2" *ngFor="let type of productTypes; let i = index">
+                <input type="radio" name="payment-group" (click)="handleProductTypeChange(type.id)" id="{{type.product_type}}" [checked]="type.id === activeProductType">
+                <label for="{{type.product_type}}">&nbsp;{{type.product_type}}</label>
+            </span>
+        </div> -->
+    </div>
+</div>
+
+<div class="container">
+    <section class="section-b-space">
+        <div class="row">
+            <div class="col">
+                <div class="slide-6 no-arrow category-slider">
+                    <owl-carousel-o [options]="CategorySliderConfig">
+                        <ng-template carouselSlide *ngFor="let category of productCategories; let i = index">
+                            <div class="category-block" [ngClass]="{'active': activeCategory === category.id}">
+                                <a (click)="handleCategoryChange(category.id)">
+                                    <div class="category-image">
+                                        <img src="{{serverURL}}/uploads/categories/{{category.category_image}}" alt="{{category.category_name}}" class="">
+                                    </div>
+                                </a>
+                                <div class="category-details">
+                                    <a (click)="handleCategoryChange(category.id)"><h5>{{category.category_name}}</h5></a>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </owl-carousel-o>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<!-- Tab product start-->
+<!-- <section class="section-b-space p-t-0 gym-product">
+    <div class="container">
+        <div class="row partition-cls">
+            <div class="col theme-tab">
+                <ul ngbNav #nav="ngbNav" [(activeId)]="active" class="tabs tab-title justify-content-center nav nav-pills">
+                    <li *ngFor="let category of productCategories; let i = index" [ngbNavItem]="category">
+                        <ng-template ngbNavContent>
+                            <div class="no-slider row">
+                                <ng-container *ngFor="let product of products[category] | slice:0:8">
+                                    <div class="product-box">
+                                        <app-product-box [product]="product" [currency]="productService.Currency" [cartModal]="true">
+                                        </app-product-box>
+                                    </div>
+                                </ng-container>
+                            </div>
+                        </ng-template>
+                    </li>
+                </ul>
+                <div [ngbNavOutlet]="nav" class="mt-2"></div>
+            </div>
+        </div>
+    </div>
+</section> -->
+<section class="p-t-0 section-b-space gym-product">
+    <div class="container">
+      <div class="row partition-cls" *ngIf="filteredProducts && filteredProducts.length > 0">
+        <div class="col-xl-3 col-sm-3" *ngFor="let product of filteredProducts">
+          <div class="product-box ">
+            <app-product-box [product]="product" [cartModal]="true">
+            </app-product-box>
+          </div>
+        </div>
+      </div>
+      <div class="row partition-cls" *ngIf="!filteredProducts || filteredProducts.length === 0">
+        <div>Sorry! No products are availabe currently.</div>
+      </div>
+    </div>
+</section>
+<!-- Tab product End -->

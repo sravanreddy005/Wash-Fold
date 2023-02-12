@@ -1,0 +1,80 @@
+<div *ngIf="!loader">
+  <div class="img-wrapper">
+    <div class="lable-block">
+      <span class="lable3" *ngIf="product.new">new</span>
+      <span class="lable4" *ngIf="product.sale">on sale</span>
+    </div>
+    <div class="front">
+      <a>
+        <img 
+          [defaultImage]="product.image ? product.image : ImageSrc" 
+          [lazyLoad]="product.image ? product.image : ImageSrc" 
+          class="img-fluid lazy-loading" 
+          alt="{{ product.product_name }}" style="max-height: 220px; width: 100%;" />
+      </a>
+    </div>
+    <!-- <div class="back" *ngIf="onHowerChangeImage">
+      <a>
+        <img [src]="product.image ? product.image : ImageSrc" class="img-fluid lazy-loading" alt="{{ product.product_name }}">
+      </a>
+    </div> -->
+    <!-- <ul class="product-thumb-list" *ngIf="thumbnail">
+      <li class="grid_thumb_img" [class.active]="ImageSrc == product.image">
+        <a href="javascript:void(0)" (mouseover)="ChangeVariantsImage(product.image)">
+          <img [lazyLoad]="product.image">
+        </a>
+      </li>
+    </ul> 
+    <div class="cart-info cart-wrap">
+      <a href="javascript:void(0)" title="Add to cart" (click)="CartModal.openModal(product)"
+        *ngIf="cartModal">
+        <i class="ti-shopping-cart"></i>
+      </a>
+      <a href="javascript:void(0)" title="Add to cart" (click)="addToCart(product)"
+        *ngIf="!cartModal">
+        <i class="ti-shopping-cart"></i>
+      </a>
+      <a href="javascript:void(0)" title="Quick View" (click)="QuickView.openModal()">
+        <i class="ti-search" aria-hidden="true"></i>
+      </a>
+    </div>-->
+  </div>
+  <div class="product-detail">
+    <div class="py-3" style="background: #eff7ff;">
+      <a [routerLink]="['/shop/product/left/sidebar/', product?.title?.replace(' ', '-')]">
+        <h4>{{ product?.title | titlecase }}</h4>
+      </a>
+      <p>{{ product?.description }}</p>
+      <div class="row pt-3 mb-0">
+        <div class="col-6">
+          <h3 class="">
+            {{ currency }}  {{ product?.price }}
+            <!-- <del *ngIf="product?.discount"><span class="money"> {{ product?.price * currency?.price | currency:currency?.currency:'symbol' }}</span></del> -->
+          </h3>
+        </div>
+        <div class="col-6">
+          <a (click)="addToCart(product)" class="btn btn-solid btn-sm"><i class="fa fa-shopping-cart"></i> Cart </a>
+          <!-- <div class="qty-box"> 
+            <div class="input-group">
+              <span class="input-group-prepend">
+                  <button type="button" class="btn quantity-left-minus" data-type="minus">
+                      <i class="ti-angle-left"></i>
+                  </button>
+              </span>
+              <input type="text" name="quantity" class="form-control input-number">
+              <span class="input-group-prepend">
+                  <button type="button" class="btn quantity-right-plus" data-type="plus">
+                      <i class="ti-angle-right"></i>
+                  </button>
+              </span>
+            </div>
+          </div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-quick-view #quickView [product]="product" [currency]="currency"></app-quick-view>
+<app-cart-modal #cartModal [product]="product" [currency]="currency" *ngIf="cartModal"></app-cart-modal>
+

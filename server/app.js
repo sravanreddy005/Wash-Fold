@@ -36,21 +36,22 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST');
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With,content-type, Authorization');
     res.setHeader('Content-Security-Policy', "default-src * 'unsafe-inline' 'unsafe-eval'; script-src * 'unsafe-inline' 'unsafe-eval'; connect-src * 'unsafe-inline'; img-src * data: blob: 'unsafe-inline'; frame-src *; style-src * 'unsafe-inline'; font-src: * 'unsafe-inline';");
+    res.setHeader('Cross-Origin-Resource-Policy', "*");
     if (req.secure) {
         res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
     }
     next();
 });
 
-// app.use(express.static(path.join(__dirname, 'dist')));
+app.use(express.static(path.join(__dirname, 'dist')));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/web', webRoutes);
 app.use('/api', adminRoutes);
 
-// app.get('*', (req, res) => {
-//     res.sendFile(path.join(__dirname, 'dist/index.html'));
-// });
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist/index.html'));
+});
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
@@ -66,7 +67,7 @@ app.use(morgan(':remote-addr :remote-user [:date[iso]] :method :url :status - :r
 
 // error handler
 app.use((err, req, res, next) => {
-    let respMsg = {responseCode: 0, errorCode: 'iw1004', message: "iw1004 :: Somthing went wrong ! Please try again."};
+    let respMsg = {responseCode: 0, errorCode: 'iw1004', message: "iw1004 :: Something went wrong ! Please try again."};
     res.status(200).send(respMsg)
 });
 

@@ -1,0 +1,35 @@
+<div class="row">
+    <div class="col">
+      <div class="title1">
+        <h4>Our Customer Testimonials</h4>
+        <h2 class="title-inner1">what our customers say</h2>
+      </div>
+    </div>
+</div>
+<section class="testimonial small-section">
+    <div class="container">        
+        <div class="row">
+            <div class="col-sm-12">
+                <owl-carousel-o class="slide-2 testimonial-slider" [options]="TestimonialSliderConfig">
+                    <ng-container *ngFor="let data of testimonials">
+                      <ng-template carouselSlide>
+                          <div>
+                            <div class="media">
+                                <div class="text-center">
+                                    <img src="assets/img/home12.png" alt="image">
+                                    
+                                </div>
+                                <div class="media-body">
+                                    <p>{{data.description}}</p>
+                                    <h5>{{data.name}}</h5>
+                                    <!-- <h6>Rating: {{data.rating}}</h6> -->
+                                </div>
+                            </div>
+                          </div>
+                      </ng-template>WAFL2023@
+                    </ng-container>
+                </owl-carousel-o>
+            </div>
+        </div>
+    </div>
+</section>

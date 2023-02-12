@@ -1,5 +1,5 @@
 const multer = require('multer');
-var fileExtension = require('file-extension')
+const fileExtension = require('file-extension');
 
 module.exports.uploadCSVFiles = multer({   
     // Configure Storage 
@@ -49,7 +49,8 @@ module.exports.uploadImages = multer({
         }
         //Success 
         cb(undefined, true)
-    }
+    },
+    
 });
 
 module.exports.uploadFiles = multer({   

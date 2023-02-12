@@ -1,5 +1,7 @@
 import { Component ,ElementRef} from '@angular/core';
 import { Router } from '@angular/router';
+import 'core-js/actual';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -7,11 +9,12 @@ import { Router } from '@angular/router';
 })
 export class AppComponent {
   title = 'admindashboard';
-  constructor(private elementRef: ElementRef,  public  _router: Router) { }
+  constructor(
+    private elementRef: ElementRef,  public  _router: Router
+    ) { }
 
   ngOnInit() {
-
-    var s = document.createElement("script");
+    const s = document.createElement("script");
     s.type = "text/javascript";
     s.src = "../assets/js/main.js";
     this.elementRef.nativeElement.appendChild(s);

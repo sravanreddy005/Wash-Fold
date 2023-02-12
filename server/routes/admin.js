@@ -4,6 +4,7 @@ const jwt = require('../helpers/jwt');
 const { uploadCSVFiles, uploadImages, uploadFiles } = require('../helpers/fileUpload');
 
 const AdminController = require('../controllers/AdminController');
+const OrdersController = require('../controllers/OrdersController');
 
 router.post('/getAdminProfile', jwt.verifyAdminJwtToken, AdminController.getAdminProfile);
 router.post('/updateAdminProfile', jwt.verifyAdminJwtToken, AdminController.updateProfile);
@@ -43,8 +44,8 @@ router.post('/deleteProductTypes', jwt.verifyAdminJwtTokenWithAccess('product-ty
 
 //Manage Categories
 router.post('/getCategories', jwt.verifyAdminJwtToken, AdminController.getCategories);
-router.post('/addCategories', jwt.verifyAdminJwtTokenWithAccess('categories', 'edit'), AdminController.createCategories);
-router.post('/updateCategories', jwt.verifyAdminJwtTokenWithAccess('categories', 'edit'), AdminController.updateCategories);
+router.post('/addCategories', jwt.verifyAdminJwtTokenWithAccess('categories', 'edit'), uploadImages.fields([{name: 'category_image', maxCount: 1}]), AdminController.createCategories);
+router.post('/updateCategories', jwt.verifyAdminJwtTokenWithAccess('categories', 'edit'), uploadImages.fields([{name: 'category_image', maxCount: 1}]), AdminController.updateCategories);
 router.post('/deleteCategories', jwt.verifyAdminJwtTokenWithAccess('categories', 'delete'), AdminController.deleteCategories);
 
 //Manage Products
@@ -61,5 +62,23 @@ router.post('/addBranch', jwt.verifyAdminJwtTokenWithAccess('branches', 'edit'),
 router.post('/updateBranch', jwt.verifyAdminJwtTokenWithAccess('branches', 'edit'), AdminController.updateBranch);
 router.post('/updateBranchStatus', jwt.verifyAdminJwtTokenWithAccess('branches', 'edit'), AdminController.updateBranchStatus);
 router.post('/deleteBranch', jwt.verifyAdminJwtTokenWithAccess('branches', 'delete'), AdminController.deleteBranch);
+
+//Manage TimeSlots
+router.post('/getTimeSlots', jwt.verifyAdminJwtToken, AdminController.getTimeSlots);
+router.post('/addTimeSlots', jwt.verifyAdminJwtTokenWithAccess('time-slots', 'edit'), AdminController.createTimeSlots);
+router.post('/updateTimeSlots', jwt.verifyAdminJwtTokenWithAccess('time-slots', 'edit'), AdminController.updateTimeSlots);
+router.post('/deleteTimeSlots', jwt.verifyAdminJwtTokenWithAccess('time-slots', 'delete'), AdminController.deleteTimeSlots);
+
+//Manage Testimonials
+router.post('/getTestimonials', jwt.verifyAdminJwtToken, AdminController.getTestimonials);
+router.post('/addTestimonial', jwt.verifyAdminJwtTokenWithAccess('testimonials', 'edit'), AdminController.addTestimonials);
+router.post('/updateTestimonial', jwt.verifyAdminJwtTokenWithAccess('testimonials', 'edit'), AdminController.updateTestimonials);
+router.post('/updateTestimonialStatus', jwt.verifyAdminJwtTokenWithAccess('testimonials', 'edit'), AdminController.updateTestimonialStatus);
+router.post('/deleteTestimonial', jwt.verifyAdminJwtTokenWithAccess('testimonials', 'delete'), AdminController.deleteTestimonials);
+
+//Manage Orders
+router.post('/getOrders', jwt.verifyAdminJwtTokenWithAccess('orders', 'view'), OrdersController.getOrdersList);
+router.post('/updateOrdersStatus', jwt.verifyAdminJwtTokenWithAccess('orders', 'edit'), OrdersController.updateOrdersStatus);
+
 
 module.exports = router;

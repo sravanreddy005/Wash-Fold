@@ -15,6 +15,7 @@ export class CategoriesComponent {
   updateForm!: FormGroup;
   submitted = false;
   list: any;
+  selectedFile: any;
   userAccess = {view: true, edit: false, delete: false};
 
   constructor(
@@ -59,6 +60,10 @@ export class CategoriesComponent {
   get form() { return this.addForm.controls; }
   get editForm() { return this.updateForm.controls; }
 
+  onFileSelect = async(event: any) => {
+    this.selectedFile = event.target.files;
+  }
+
   addFormSubmit = async() => {
     try {
       this.submitted = true;
@@ -67,7 +72,16 @@ export class CategoriesComponent {
         this.submitted = false;
           return;
       }
-      const addResp = await this.adminService.addOrUpdateData('addCategories', this.addForm.value);
+      let formData = new FormData;
+      for (const key of Object.keys(this.addForm.value)) {
+        let value = this.addForm.value[key];
+        formData.append(key, value);
+      }
+      if(this.selectedFile && this.selectedFile.length > 0){
+        formData.append('image_path', 'categories');
+        formData.append("category_image", this.selectedFile[0], this.selectedFile[0]['name']);
+      }
+      const addResp = await this.adminService.addOrUpdateData('addCategories', formData);
       if(addResp && addResp.responseCode === 1){
         this.getCategories();
         await successAlert("Details added successfully");
@@ -80,6 +94,7 @@ export class CategoriesComponent {
       await errorAlert(error.message ? error.message : 'Something went wrong ! Please try again');
     }
     this.submitted = false;
+    this.selectedFile = '';
     this.addForm.reset();
   }
 
@@ -91,7 +106,16 @@ export class CategoriesComponent {
         this.submitted = false;
           return;
       }
-      const updateResp = await this.adminService.addOrUpdateData('updateCategories', this.updateForm.value);
+      let formData = new FormData;
+      for (const key of Object.keys(this.updateForm.value)) {
+        let value = this.updateForm.value[key];
+        formData.append(key, value);
+      }
+      if(this.selectedFile && this.selectedFile.length > 0){
+        formData.append('image_path', 'categories');
+        formData.append("category_image", this.selectedFile[0], this.selectedFile[0]['name']);
+      }
+      const updateResp = await this.adminService.addOrUpdateData('updateCategories', formData);
       if(updateResp && updateResp.responseCode === 1){
         this.getCategories();
         await successAlert("Details updated successfully");
@@ -105,6 +129,7 @@ export class CategoriesComponent {
     }
     
     this.submitted = false;
+    this.selectedFile = '';
     this.updateForm.reset();
     document.getElementById("close_edit_modal")?.click();
   }

@@ -44,6 +44,14 @@ const cacheData = {
         key: 'Branches',
         time: '24h'
     },
+    TimeSlots: {
+        key: 'TimeSlots',
+        time: '24h'
+    },
+    Testimonials: {
+        key: 'Testimonials',
+        time: '24h'
+    },
 };
 
 class AdminService {
@@ -85,14 +93,15 @@ class AdminService {
         });
     };
 
-    getRecordsFromDB(tableName, cache = true, whereData = null) {
+    getRecordsFromDB(tableName, cache = true, whereData = null, orderBy = []) {
         return new Promise(async (resolve, reject) => {
             try {
-                const records = cache ? await getCache(cacheData[tableName].key) : null;
+                // const records = cache ? await getCache(cacheData[tableName].key) : null;
+                const records = null;
                 if (cache && records && records.length > 0) {
                     resolve(records);
                 } else {
-                    let data = await AdminModels[tableName].findAll({where: whereData});
+                    let data = await AdminModels[tableName].findAll({where: whereData},{order: orderBy});
                     if(cache){
                         await setCache(data, cacheData[tableName].key, cacheData[tableName].time);
                     }
@@ -110,6 +119,23 @@ class AdminService {
                 let data = await AdminModels[tableName].findAll({
                     attributes: attributes,
                     where: whereData,
+                    order: [['created_at', 'DESC']],
+                    include: includeData,
+                });
+                resolve(data);
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    getRecordsWithJoinLimitFromDB(tableName, whereData = '', includeData, limit = '', attributes = '') {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let data = await AdminModels[tableName].findAll({
+                    attributes: attributes,
+                    where: whereData,
+                    limit: limit,
                     order: [['created_at', 'DESC']],
                     include: includeData,
                 });
