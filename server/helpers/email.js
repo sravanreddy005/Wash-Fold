@@ -106,7 +106,7 @@ module.exports.sendMail = (toMail, replaceData, type, emailProvider = 'nodemaile
                   const options = {
                     method: 'POST',
                     url: 'https://emailapi.netcorecloud.net/v5.1/mail/send',
-                    headers: {'Content-Type': 'application/json', 'api_key': 'ed49b435d04f04584e8985e15c364947'},
+                    headers: {'Content-Type': 'application/json', 'api_key': ''},
                     data: bodyData
                   };
 
