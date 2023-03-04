@@ -38,11 +38,11 @@
                                     <td><input type="text" class="form-control form-control-sm" name="search_string2" [(ngModel)]="search_string2" placeholder="First Name"/></td>
                                     <td><input type="text" class="form-control form-control-sm" name="search_string3" [(ngModel)]="search_string3" placeholder="Email"/></td>
                                     <td><input type="text" class="form-control form-control-sm" name="search_string4" [(ngModel)]="search_string4" placeholder="Mobile No"/></td>
-                                    <td><input type="text" class="form-control form-control-sm" name="search_string5" [(ngModel)]="search_string5" placeholder="Branch"/></td>
+                                    <td></td>
                                     <td></td>
                                     <td></td>
                                 </tr>
-                                <tr *ngFor="let admin of adminsList | smartFilter: { 'role.role_name': search_string1, first_name: search_string2, email: search_string3, mobile_number: search_string4, 'branch.name': search_string5 } | paginate: { id: 'pagination_id', itemsPerPage: pageSize, currentPage: page, totalItems: totalCount }; let i = index">
+                                <tr *ngFor="let admin of adminsList | smartFilter: { 'role.role_name': search_string1, first_name: search_string2, email: search_string3, mobile_number: search_string4 } | paginate: { id: 'pagination_id', itemsPerPage: pageSize, currentPage: page, totalItems: totalCount }; let i = index">
                                     <td>{{i+1}}</td>
                                     <td>{{admin.role.role_name}}</td>
                                     <td>{{admin.first_name}}</td>
@@ -124,6 +124,17 @@
                                 </div>
                             </div>
                             <div class="col-md-6">
+                                <label for="branch" class="control-label">Branch</label>
+                                <select class="form-control custom-select" formControlName="branch">
+                                    <option value="">--- SELECT ---</option>
+                                    <option *ngFor="let data of branchesList;" value="{{data.id}}">{{data.name}}</option>
+                                </select>
+                                <div *ngIf="form?.branch?.invalid && (form?.branch?.dirty || form?.branch?.touched)"
+                                    class="error">
+                                    <small *ngIf="form?.branch?.errors?.required">Please select a branch</small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
                                 <label for="first_name" class="form-label">First Name*</label>
                                 <input type="text" class="form-control" formControlName="first_name">
                                 <div *ngIf="form?.first_name?.invalid && (form?.first_name?.dirty || form?.first_name?.touched)" class="error">
@@ -200,6 +211,17 @@
                                 </div>
                             </div>
                             <div class="col-md-6">
+                                <label for="branch" class="control-label">Branch</label>
+                                <select class="form-control custom-select" formControlName="branch">
+                                    <option value="">--- SELECT ---</option>
+                                    <option *ngFor="let data of branchesList;" value="{{data.id}}">{{data.name}}</option>
+                                </select>
+                                <div *ngIf="editForm?.branch?.invalid && (editForm?.branch?.dirty || editForm?.branch?.touched)"
+                                    class="error">
+                                    <small *ngIf="editForm?.branch?.errors?.required">Please select a branch</small>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
                                 <label for="first_name" class="control-label">First Name*</label>
                                 <input type="text" class="form-control" formControlName="first_name">
                                 <div *ngIf="editForm?.first_name?.invalid && (editForm?.first_name?.dirty || editForm?.first_name?.touched)"
@@ -231,17 +253,6 @@
                                         number</small>
                                     <small *ngIf="editForm?.mobile_number?.errors?.pattern">Please enter valid mobile
                                         number</small>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="branch" class="control-label">Branch</label>
-                                <select class="form-control custom-select" formControlName="branch">
-                                    <option value="">--- SELECT ---</option>
-                                    <option *ngFor="let data of branchesList;" value="{{data.id}}">{{data.branch_name}}</option>
-                                </select>
-                                <div *ngIf="editForm?.branch?.invalid && (editForm?.branch?.dirty || editForm?.branch?.touched)"
-                                    class="error">
-                                    <small *ngIf="editForm?.branch?.errors?.required">Please select a branch</small>
                                 </div>
                             </div>
                             <div class="col-md-12">

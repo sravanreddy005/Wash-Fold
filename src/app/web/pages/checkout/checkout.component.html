@@ -31,6 +31,9 @@
                                 <h3>Address Details</h3>
                             </div>
                             <div class="row check-out">
+                                <h5>Are you a existing customer ? <a (click)="openModal(checkout)">Click Here</a></h5>
+                            </div>
+                            <div class="row check-out">
                                 <div class="form-group col-md-6 col-sm-6 col-xs-12">
                                     <div class="field-label">First Name*</div>
                                     <input type="text" formControlName="first_name" placeholder="" autocomplete="off">
@@ -106,7 +109,7 @@
                                 </div>                                 
                                 <div class="form-group col-md-6 col-sm-6 col-xs-12">
                                     <div class="field-label">Pick-Up Time Slot*</div>
-                                    <select formControlName="pickup_time_slot">
+                                    <select formControlName="pickup_time_slot" (change)="handlePickupTimeSlotChange()">
                                         <option value="" selected>Select Slot</option>
                                         <option *ngFor="let slot of pickupTimeSlots" value="{{json.stringify(slot)}}">{{slot.from_time}} - {{slot.to_time}}</option>
                                     </select>
@@ -170,8 +173,57 @@
                         </div>
                     </div>
                 </form>
+                <ng-template #checkout let-c="close" let-d="dismiss">
+                    <form [formGroup]="existingCustomerForm" (ngSubmit)="existingCustomerFormSubmit()">
+                        <div class="modal-header">
+                            <h4 class="modal-title" id="modal-basic-title">Existing Customer</h4>
+                            <button type="button" id="existing-m-close" class="btn-close" aria-label="Close" (click)="d('Cross click')"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row check-out">
+                                <div class="form-group col-md-10 col-sm-10 col-xs-10">
+                                    <div class="field-label">Email Address*</div>
+                                    <input type="text" formControlName="email" placeholder="" autocomplete="off">                
+                                    <div *ngIf="form1?.email?.invalid && (form1?.email?.dirty || form1?.email?.touched)" class="text text-danger">
+                                        <small *ngIf="form1?.email?.errors?.required">Please enter email</small>
+                                        <small *ngIf="form1?.email?.errors?.pattern">Please enter valid email</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" [disabled]="existingCustomerForm.invalid" class="btn btn-primary">Continue</button>
+                        </div>
+                    </form>
+                </ng-template>
+                <button style="display: none" id="otpModalBtn" (click)="openModal(checkoutOTP)"></button>
+                <ng-template #checkoutOTP let-c="close" let-d="dismiss">
+                    <form [formGroup]="otpForm" (ngSubmit)="otpFormSubmit()">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Verification</h4>
+                            <button type="button" id="otp-m-close" class="btn-close" aria-label="Close" (click)="d('Cross click')"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>We have sent you an OTP to your email address. Please verify to proceed.</p>
+                            <div class="row check-out">
+                                <div class="form-group col-md-6 col-sm-6 col-xs-12">
+                                    <div class="field-label">OTP*</div>
+                                    <input type="text" formControlName="otp" placeholder="" autocomplete="off">                
+                                    <div *ngIf="form2?.otp?.invalid && (form2?.otp?.dirty || form2?.otp?.touched)" class="text text-danger">
+                                        <small *ngIf="form2?.otp?.errors?.required">Please enter otp</small>
+                                        <small *ngIf="form2?.otp?.errors?.pattern">Please enter valid otp</small>
+                                    </div>
+                                </div>                                
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" [disabled]="otpForm.invalid" class="btn btn-primary">Verify</button>
+                        </div>
+                    </form>
+                </ng-template>
             </div>
         </div>
     </div>
 </section>
 <!-- section end -->
+  

@@ -18,7 +18,7 @@ export class AdminListComponent {
   showModal! : boolean;
   submitted = false;
   editBtnDisable = false;
-  adminsList: any;
+  adminsList: any = [];
   roles: any;
   userAccess = {view: true, edit: false, delete: false};
   page: number = 1;
@@ -88,7 +88,7 @@ export class AdminListComponent {
         this.totalCount = (adminsResp.adminsList).length;
       }
     } catch (error) {
-      this.adminsList = '';
+      this.adminsList = [];
     }    
   }
 

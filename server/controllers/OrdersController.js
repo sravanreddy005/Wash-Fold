@@ -40,7 +40,6 @@ const {
 module.exports.addOrder = async (req, res, next) => {
     try {
         let reqBody = req.body;
-        console.log('reqBody', reqBody);
         if(
             reqBody &&
             reqBody.first_name && validateData('alnum', reqBody.first_name) && 
@@ -80,23 +79,48 @@ module.exports.addOrder = async (req, res, next) => {
             const customerInfoResp = await addOrdersRecordToDB(reqData, 'CustomerInfo', false);
             if(customerInfoResp){
                 let orderData = [];
+                let orderMailData = [];
+                let totalOrderPrice = 0;
                 let productIDs = reqBody.cart_items.map(data => data.id);
                 const productsInfo = await getRecordsFromDB('Products', false, {id: {[Op.in]:productIDs}});
                 productsInfo.map((value) => {
                     let quantity = reqBody.cart_items.filter(val => val.id === value.id)[0].quantity;
+                    let totalPrice = (parseInt(quantity) * parseFloat(value.product_price)).toFixed(2);
+                    totalOrderPrice = totalOrderPrice + totalPrice;
                     let data = {
                         order_id: orderID,
                         product_id: value.id,
                         product_price: value.product_price,
                         quantity: quantity,
-                        total_price: (parseInt(quantity) * parseFloat(value.product_price)).toFixed(2),
+                        total_price: totalPrice,
                     }  
-                    orderData.push(data);              
+                    orderData.push(data); 
+                    let data1 = {
+                        product_name: value.product_name,
+                        product_price: value.product_price,
+                        product_image: value.product_image,
+                        quantity: quantity,
+                        total_price: totalPrice,
+                    } 
+                    orderMailData.push(data1);            
                 });
-                console.log('orderData', orderData);
                 const ordersResp = orderData.length > 0 ? await addOrdersBulkRecordsToDB(orderData, 'Orders', false) : null;
-                console.log('ordersResp', ordersResp);
                 if(ordersResp){
+                    const replaceData = {
+                        first_name: reqBody.first_name,
+                        orderID : orderID,
+                        totalOrderPrice : totalOrderPrice,
+                        orderData : orderMailData,
+                        pickupDate: reqBody.pickup_date,
+                        pickupTimeSlot: pickupTimeData.from_time+ ' - ' +pickupTimeData.to_time,
+                        dropDate: reqBody.drop_date,
+                        dropTimeSlot: dropTimeData.from_time+ ' - ' +dropTimeData.to_time,
+                        pincode: reqBody.pincode,
+                        city: reqBody.city,
+                        address1: reqBody.address1,
+                        address2: reqBody.address2,
+                    }
+                    const sendMailResp = await sendMail(reqBody.email, replaceData, 'sendOrderConfirmation', 'sendinblue');
                     return res.status(200).json({
                         responseCode: 1, 
                         message: "Details successfully added",
@@ -113,7 +137,70 @@ module.exports.addOrder = async (req, res, next) => {
             return res.status(400).json({responseCode: 0, errorCode: 'iw1003', message: "Bad Request"});
         }        
     }catch (err) {
-        console.log('error', err);
+        return next(err);
+    }
+}
+
+/**
+ * fetching the customer details
+ */
+module.exports.getExistingCustomerDetails = async (req, res, next) => {
+    try {
+        if(req.body && req.body.email){
+            let whereData = {'email': req.body.email};
+            const resp = await getOneOrderRecordFromDB('CustomerInfo', whereData);
+            return res.status(200).json({responseCode: 1, message: "success", info: resp});  
+        }else{
+            res.status(400).json({responseCode: 0, message: "Bad Request"});      
+        }        
+    }catch (err) {
+        return next(err);
+    }
+}
+
+/**
+ * sending the verification email
+ */
+module.exports.sendVerificationEmail = async (req, res, next) => {
+    try {
+        if(req.body && req.body.email && req.body.name){
+            let randomOTP = Math.floor(100000 + Math.random() * 900000);
+            const resp = await addOrdersRecordToDB({email: req.body.email, otp: randomOTP}, 'VerificationOTP', false);
+            if(resp){
+                let replaceData = {
+                    email: req.body.email,
+                    name: req.body.name,
+                    otp: randomOTP
+                }
+                let sendMailResp = await sendMail(req.body.email, replaceData, 'sendOTP', 'sendinblue');
+                return res.status(200).json({responseCode: 1, message: "success"});
+            }else {
+                return res.status(200).json({responseCode: 0});
+            }
+        }else{
+            res.status(400).json({responseCode: 0, message: "Bad Request"});      
+        }        
+    }catch (err) {
+        return next(err);
+    }
+}
+
+/**
+ * verifyOTP
+ */
+module.exports.verifyOTP = async (req, res, next) => {
+    try {
+        if(req.body && req.body.email && req.body.otp){
+            const resp = await getOneOrderRecordFromDB('VerificationOTP', {email: req.body.email, otp: req.body.otp});
+            if(resp){
+                return res.status(200).json({responseCode: 1, message: "success"});
+            }else {
+                return res.status(200).json({responseCode: 0});
+            }
+        }else{
+            res.status(400).json({responseCode: 0, message: "Bad Request"});      
+        }        
+    }catch (err) {
         return next(err);
     }
 }
@@ -123,7 +210,6 @@ module.exports.addOrder = async (req, res, next) => {
  */
  module.exports.getOrderDetails = async (req, res, next) => {
     try {
-        console.log('req.body', req.body);
         if(req.body && req.body.order_id){
             let whereData = {'order_id': (req.body.order_id).toString()};
             let includeData = [ 
@@ -138,15 +224,12 @@ module.exports.addOrder = async (req, res, next) => {
                     }]
                 }                
             ];
-            console.log('includeData', includeData);
             const resp = await getOneOrderRecordWithJoinFromDB('CustomerInfo', whereData, includeData);
-            console.log('resp', resp);
             return res.status(200).json({responseCode: 1, message: "success", orderInfo: resp});  
         }else{
             res.status(400).json({responseCode: 0, message: "Bad Request"});      
         }        
     }catch (err) {
-        console.log('err', err);
         return next(err);
     }
 }
@@ -177,12 +260,9 @@ module.exports.addOrder = async (req, res, next) => {
                 }]
             }                
         ];
-        console.log('includeData', includeData);
         const resp = await getOrderRecordsWithJoinFromDB('CustomerInfo', whereData, includeData);
-        console.log('resp', resp);
         return res.status(200).json({responseCode: 1, message: "success", list: resp});       
     }catch (err) {
-        console.log('err', err);
         return next(err);
     }
 }
@@ -192,7 +272,6 @@ module.exports.addOrder = async (req, res, next) => {
  */
 module.exports.updateOrdersStatus = async (req, res, next) => {
     try {        
-        console.log('req.body', req.body);
         if(req.body.id && req.body.status){
 
             let updateResp = await updateOrderRecordInDB('CustomerInfo', {order_status: req.body.status}, {id: req.body.id}, false);

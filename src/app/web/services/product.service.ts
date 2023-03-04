@@ -38,7 +38,6 @@ export class ProductService {
   // Product
   private get products(): Observable<any> {
     this.Products = this.http.post<any>(`${this.apiURL}/web/getProducts`, {}).pipe(map((data: any) => data.products));
-    console.log('this.Products', this.Products);    
     // this.Products = this.http.get<any>('assets/web/data/products.json').pipe(map(data => data));
     this.Products.subscribe(next => { localStorage['products'] = JSON.stringify(next) });
     return this.Products = this.Products.pipe(startWith(JSON.parse(localStorage['products'] || '[]')));

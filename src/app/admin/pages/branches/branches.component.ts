@@ -103,8 +103,6 @@ export class BranchesComponent {
   loadGoogleMap = (id: any) => {
     let mapURL = (id && id === 'addform-map') ? this.addForm.value.google_map_link : this.updateForm.value.google_map_link;
     if(mapURL && urlRegx.test(mapURL)){
-      console.log('mapURL', mapURL);
-      
       this.displayMap = true;
       let iframe = document.createElement('iframe');
       iframe.src = mapURL;

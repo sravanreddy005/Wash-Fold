@@ -22,11 +22,7 @@ export class SidebarComponent implements OnInit {
     this.accessService.currentAdminUserModules.subscribe(val => {
       this.modulesList = val
     });
-    this.routerVal = this.activatedRoute.snapshot;
-    
-    console.log('this.activatedRoute', this.activatedRoute.snapshot?.routeConfig?.path);
-    console.log('this.routerVal', this.routerVal);
-    
+    this.routerVal = this.activatedRoute.snapshot;    
   }
 
 }

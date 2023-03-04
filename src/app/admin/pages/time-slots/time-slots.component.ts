@@ -47,16 +47,12 @@ export class TimeSlotsComponent {
 
   getTimeSlots = async() => {
     const resp = await this.adminService.getData('getTimeSlots');
-    console.log('resp', resp);
-    
     if(resp && resp.responseCode === 1 && resp.data){
       this.list = resp.data;
-      console.log('this.list', this.list);
     }
   }
 
   edit = (data: any) => {
-    console.log('edit data', data);    
     this.updateForm.setValue({
       id: data.id, 
       type: data.type,

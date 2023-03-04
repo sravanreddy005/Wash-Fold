@@ -69,8 +69,6 @@ export class RolesComponent implements OnInit {
   }
 
   editRole = async(roleData: any) => {
-    console.log('roleData', roleData);
-    
     this.modulesList = await this.getModules();
     this.editRoleForm = this.formBuilder.group({
       role_id: ['', [Validators.required]],

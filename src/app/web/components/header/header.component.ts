@@ -27,8 +27,6 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit(): void {
     this.productService.cartItems.subscribe(response => this.products = response);
-    console.log('this.products header', this.products);
-    
   }
 
   // @HostListener Decorator

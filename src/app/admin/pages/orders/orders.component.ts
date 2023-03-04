@@ -79,8 +79,6 @@ export class OrdersComponent {
   }
 
   changeOrderStatus = (data: any) => {
-    console.log('data', data);
-    
     this.changeStatusForm.setValue({
       id: data.id,
       status: data.order_status

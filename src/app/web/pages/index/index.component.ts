@@ -77,7 +77,6 @@ export class IndexComponent implements OnInit {
         productsList.push(data);
       }); 
       this.products = productsList;
-      console.log('this.products', this.products); 
     }    
   }
 

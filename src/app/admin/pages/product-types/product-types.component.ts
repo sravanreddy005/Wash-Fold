@@ -44,11 +44,8 @@ export class ProductTypesComponent {
 
   getProductTypes = async() => {
     const resp = await this.adminService.getData('getProductTypes');
-    console.log('resp', resp);
-    
     if(resp && resp.responseCode === 1 && resp.data){
       this.list = resp.data;
-      console.log('this.list', this.list);
     }
   }
 

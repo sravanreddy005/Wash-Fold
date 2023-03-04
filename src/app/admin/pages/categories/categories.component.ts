@@ -43,17 +43,12 @@ export class CategoriesComponent {
 
   getCategories = async() => {
     const resp = await this.adminService.getData('getCategories');
-    console.log('resp', resp);
-    
     if(resp && resp.responseCode === 1 && resp.data){
       this.list = resp.data;
-      console.log('this.list', this.list);
     }
   }
 
   edit = (data: any) => {
-    console.log('edit data', data);
-    
     this.updateForm.setValue({id: data.id, category_name: data.category_name});
   }
 

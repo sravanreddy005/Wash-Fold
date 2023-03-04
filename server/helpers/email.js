@@ -23,6 +23,14 @@ module.exports.sendMail = (toMail, replaceData, type, emailProvider = 'nodemaile
                 var templateFile = 'reset-password.html';
                 var subject = 'Reset your password';
                 break;
+            case 'sendOTP':
+                var templateFile = 'send-otp.html';
+                var subject = 'Verification';
+                break;
+            case 'sendOrderConfirmation':
+                var templateFile = 'order-confirmation.html';
+                var subject = 'Order Confirmation';
+                break;
             default:
                 subject = '';
                 break;
@@ -33,9 +41,50 @@ module.exports.sendMail = (toMail, replaceData, type, emailProvider = 'nodemaile
                 console.log(err);
                 reject(err)
               } else {
+                let imageURLs = {
+                  logo: process.env.BASE_URL + '/uploads/logo.png',
+                  facebook: process.env.BASE_URL + '/uploads/facebook.png',
+                  linkedin: process.env.BASE_URL + '/uploads/linkedin.png',
+                  twitter: process.env.BASE_URL + '/uploads/twitter.png',
+                  youtube: process.env.BASE_URL + '/uploads/youtube.png',
+                }
+                let data = {...replaceData, ...imageURLs}
+
                 const template = handlebars.compile(html);
-                const htmlToSend = template(replaceData);
-                if(emailProvider === 'pepiPost'){
+                const htmlToSend = template(data);
+                if(emailProvider === 'sendinblue'){
+                  let bodyData = {  
+                      "sender":{  
+                        "name":"Wash&Fold",
+                        "email":"washandfoldlaundrette@gmail.com"
+                      },
+                      "to":[  
+                        {  
+                            "email":toMail,
+                            "name":replaceData.name
+                        }
+                      ],
+                      "subject": subject,
+                      "htmlContent":htmlToSend
+                  }
+                  const options = {
+                    method: 'POST',
+                    url: 'https://api.sendinblue.com/v3/smtp/email',
+                    headers: {
+                      'Content-Type': 'application/json', 
+                      'api-key': ''
+                    },
+                    data: bodyData
+                  };
+
+                  axios.request(options).then(function (response) {
+                    console.log('email sendinblue response', response.data);
+                    resolve(response.data);
+                  }).catch(function (error) {
+                    console.error('email sendinblue error', error);
+                    reject(error);
+                  });
+                }else if(emailProvider === 'pepiPost'){
                   let bodyData = {
                     from: {email: fromMail, name: 'Wash&Fold'},
                     subject: subject,
@@ -54,7 +103,7 @@ module.exports.sendMail = (toMail, replaceData, type, emailProvider = 'nodemaile
                   }
                   
 
-                  var options = {
+                  const options = {
                     method: 'POST',
                     url: 'https://emailapi.netcorecloud.net/v5.1/mail/send',
                     headers: {'Content-Type': 'application/json', 'api_key': 'ed49b435d04f04584e8985e15c364947'},

@@ -28,7 +28,6 @@ export class OrderStatusComponent {
     let sessionStorageData = sessionStorage.getItem('orderInfo');
     if(sessionStorageData){
       let orderInfo = JSON.parse(sessionStorageData);
-      console.log('orderInfo', orderInfo);
       if(orderInfo && orderInfo.orderID){
         this.orderID = orderInfo.orderID;
         this.status = orderInfo.status;
@@ -39,12 +38,10 @@ export class OrderStatusComponent {
 
   getOrderDetails = async() => {
     let resp = await this.webService.getData('getOrderDetails', {order_id: this.orderID});
-    console.log('resp', resp);
     if(resp && resp.orderInfo){
       this.orderDetails = resp.orderInfo;
       this.orderProducts = resp.orderInfo.orders;
       this.totalAmount = await getSumByKey(this.orderProducts, 'total_price');
-      console.log('this.totalAmount', this.totalAmount);
     }
   }
 }
